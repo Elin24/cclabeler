@@ -14,6 +14,10 @@ opeStack = {
         }
         this.stack.push(dstack);
         this.length++;
+        if(this.length > 200) {
+            this.stack.splice(0, 1);
+            this.length--;
+        }
     },
     popStack: function () {
         this.length--;
@@ -403,4 +407,8 @@ function runDraw() {
 window.onload = function () {
     loadImage();
     drawGrid();
+
+    setInterval(function() {
+        save();
+    }, 20 * 1000);
 };

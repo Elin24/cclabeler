@@ -1,10 +1,10 @@
 # Crowd Counting Labeler
 
-Crowd Counting Labeler us a tool for labeling pedestrians in a images. It is a web application which could be deployed quickly, and provides two types label: `box` and `point`.
+Crowd Counting Labeler is a tool for labeling pedestrians in a images. It is a web application which could be deployed quickly, and provides two types label: `box` and `point`.
 
 At present, it does not support multi-class labeling, which would be a future function.
 
-![exhibitation](images/cclabel.jpg)
+![exhibitation](readmeimg/cclabel.jpg)
 
 ## Request
 
