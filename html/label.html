@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="static/favicon.ico" />
+    <link rel="stylesheet" href="static/style.css">
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+    <script src="static/jquery.min.js"></script>
+    <script src="static/bootstrap.min.js"></script>
+    <link href="static/bootstrap-slider.min.css" rel="stylesheet">
+    <script src="static/jquery.mousewheel.min.js"></script>
+    <script type='text/javascript' src="static/bootstrap-slider.min.js"></script>
+    <title>label page</title>
+</head>
+
+<body>
+    <div class="header">
+    </div>
+    <div class="left">
+        <h1 id="title"><img width="35" height="35" src="static/icon-blue.svg" />&nbsp;CC Labeler</h1>
+        <button type="button" id="lastimg" class="btn btn-info"><img width="20" height="20"
+                src="static/oldimg.svg" /></button>
+        <button type="button" id="loadimg" class="btn btn-info"><img width="20" height="20"
+                src="static/load.svg" /></button>
+        <button type="button" id="nextimg" class="btn btn-info"><img width="20" height="20"
+                src="static/newimg.svg" /></button>
+        <div class="progress">
+            progress
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                aria-valuemax="100" style="width: 0%;">
+                <!-- <span class="sr-only">0% 完成</span> -->
+            </div>
+            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                aria-valuemax="100" style="width: 0%;">
+                <!-- <span class="sr-only">0% 完成（警告）</span> -->
+            </div>
+        </div>
+        <h4></h4>
+        <button type="button" id="opbox" class="btn btn-info"><img width="20" height="20" src="static/rectangle.svg" />
+            &nbsp; box label</button>
+        <button type="button" id="oppoint" class="btn btn-info"><img width="20" height="20" src="static/point.svg" />
+            &nbsp; point</button>
+        <button type="button" id="oprectify" class="btn btn-info"><img width="20" height="20"
+                src="static/rectify.svg" /> &nbsp; rectify</button>
+        <h3 class="glabel"></h3>
+        <canvas id="grid" height="320" width="320">不支持Canvas</canvas>
+        <button type="button" id="mark" class="btn btn-success">Marked as labeled</button>
+        <button type="button" id="unmark" class="btn btn-warning">Marked as unlabeled</button>
+        <div id="lineStyleControler" class="row">
+            <div class="col-sm-4"><b>point size:</b></div>
+            <div class="col-sm-8">
+                <input id="wslider" data-slider-id='ex1Slider' type="text" data-slider-min="5" data-slider-max="40"
+                    data-slider-step="1" data-slider-value="15" />
+            </div>
+            <div class="col-sm-4"><b>point color:</b></div>
+            <div class="col-sm-8">
+                <button type="button" id="pc-red" class="btn btn-danger"></button>
+                <button type="button" id="pc-green" class="btn btn-success"></button>
+                <button type="button" id="pc-orange" class="btn btn-warning"></button>
+            </div>
+        </div>
+        <div id="save" class="hide alert alert-success">SAVE SUCCESS</div>
+        <div id="finished" class="hide alert alert-success">FINISHED</div>
+        <div id="unfinished" class="hide alert alert-warning">UNFINISHED</div>
+    </div>
+    <div class="right">
+        <canvas id="cvs" width="1440" height="900">
+            悲剧了，你的浏览器不支持Canvas？！赶快换一个吧！！
+        </canvas>
+    </div>
+    <script>
+        var user = "{{ user }}";
+        var imgpath = "static/{{ imgid }}.jpg";
+        var initMarkStatus = {{ marks }};
+        var drawStackDict = JSON.parse("{{ drawStack }}".replace(/&quot;/g, '"'));
+
+        function drawSchedule(done, half, data) {
+            $('.left .progress .progress-bar-success').width(String(done / data * 100) + '%');
+            $('.left .progress .progress-bar-warning').width(String(half / data * 100) + '%');
+            $('.left h4').text('(' + String(done) + ", " + String(half) + ") / " + String(data));
+        }
+        drawSchedule({{ donelen }}, {{ halflen }}, {{ datalen }});
+    </script>
+    <script src="static/global.js"></script>
+    <script src="static/label.js"></script>
+    <script src="static/button.js"></script>
+</body>
+
+</html>

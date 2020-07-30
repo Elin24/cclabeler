@@ -1,0 +1,43 @@
+body {
+    text-align: center;
+    background-image: linear-gradient(to right, #243B55,  #141E30, #243B55)
+}
+
+.body {
+    margin-top: 280px;
+    height: 400px;
+}
+
+.left {
+    margin-left: 40px;
+    float: left;
+    height: 100%;
+    width: 1280px;
+    background-image: linear-gradient(to right, #243B55 , #2980b9);
+    padding: 40px 40px 40px;
+}
+
+.right {
+    margin-left: 40px;
+    float: left;
+    height: 100%;
+    width: 480px;
+    background-image: linear-gradient(to right, #2980b9, #243B55);
+}
+
+.login {
+    float: right;
+    height: 50%;
+    width: 500px;
+}
+.login label {
+    color: aliceblue;
+}
+.header {
+    color: aliceblue;
+    margin-bottom: 30px;
+}
+
+#title img {
+    margin-bottom: 10px;
+}

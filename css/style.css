@@ -1,0 +1,56 @@
+body {
+    text-align: center;
+}
+.header {
+    margin-bottom: 30px;
+}
+
+.left {
+    margin-left: 40px;
+    float: left;
+    height: 810px;
+    width: 320px;
+    padding-top: 50px;
+}
+.right {
+    margin-left: 40px;
+    float: left;
+    width: 1280px;
+}
+#grid {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.header .btn {
+    margin-top: 50px;
+    margin-left: 10px;
+}
+
+.left .progress {
+    width: 75%;
+    float: left;
+    margin-top: 10px;
+}
+
+.right h4 {
+    float: right;
+    margin-top: 0px;
+    margin-right: 40px;
+}
+
+#title img {
+    margin-bottom: 10px;
+}
+
+.alert {
+    margin-top: 15px;
+}
+
+#lineStyleControler {
+    padding-top: 20px;
+}
+
+#lineStyleControler button {
+    width: 32%;
+}

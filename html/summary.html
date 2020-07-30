@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Label Information</title>
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+    <script src="static/jquery.min.js"></script>
+    <script src="static/bootstrap.min.js"></script>
+    <script src="https://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
+   <script src="http://code.highcharts.com.cn/highcharts/modules/annotations-advanced.js"></script>
+
+    <style>
+        td {
+            text-align: center;
+        }
+        th {
+            text-align: center
+        }
+    </style>
+
+
+    <input type="hidden" id="user" value="{{ p100}}">
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <caption>Base Information</caption>
+                    <thead>
+                        <tr>
+                            <th>Image Number</th>
+                            <th>Label Number</th>
+                            <th>average</th>
+                            <th>min Num</th>
+                            <th>max Num</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ imgNum }}</td>
+                            <td>{{ LabelNum }}</td>
+                            <td>{{ averageNum }}</td>
+                            <td>{{ mlNum }}</td>
+                            <td>{{ mxNum }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <caption>Detailed Information</caption>
+                    <thead>
+                        <tr>
+                            <th>     </th>
+                            <th>0~100</th>
+                            <th>100~300</th>
+                            <th>300~600</th>
+                            <th>600~1000</th>
+                            <th>1000~2000</th>
+                            <th>2000~4000</th>
+                            <th>more than 4000</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>QNRF</td>
+                            <td>29</td>
+                            <td>511</td>
+                            <td>438</td>
+                            <td>233</td>
+                            <td>180</td>
+                            <td>106</td>
+                            <td>38</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td>cchub</td>
+                            <td>{{ p100 }}</td>
+                            <td>{{ p300 }}</td>
+                            <td>{{ p600 }}</td>
+                            <td>{{ p1000 }}</td>
+                            <td>{{ p2000 }}</td>
+                            <td>{{ p4000 }}</td>
+                            <td>{{ pabove4000 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="container" style="width: 850px; height: 600px; margin: 0 auto"></div>
+    <script language="JavaScript">
+        var html=[];
+        html[0] =  parseInt("{{p100}}");
+        html[1] =  parseInt("{{p300}}");
+        html[2] =  parseInt("{{p600}}");
+        html[3] =  parseInt("{{p1000}}");
+        html[4] =  parseInt("{{p2000}}");
+        html[5] =  parseInt("{{p4000}}");
+        html[6] =  parseInt("{{pabove4000}}");
+        var chart = Highcharts.chart('container',{
+            chart: {
+                type: 'column'
+            },
+            credits: {
+                enabled: false
+            },
+
+            title: {
+                text: 'crowd distribution histogram'
+            },
+            xAxis: {
+                categories: [
+                    '0~100','100~300','300~600','600~1000','1000~2000','2000~4000','more than 4000'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'ImageNum'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'QNRF',
+                data: [29,511,438,233,180,106,38],
+                 },
+                {name: 'cchub',
+                data:  html}
+                ]
+        });
+    </script>
+
+    <div id="container1" style="width:1200px;height:300px;margin: 0 auto"></div>
+    <script language="JavaScript">
+        var cat = "{{userInf.name}}";
+        var done = "{{userInf.done}}";
+        var nodon = "{{userInf.Nodone}}";
+        var amount = "{{userInf.label_amount}}";
+        arr    = cat.replace(/\[/g, '').replace(/\]/g, '');
+        don    = done.replace(/\[/g, '').replace(/\]/g, '');
+        nodone = nodon.replace(/\[/g, '').replace(/\]/g, '');
+        mount  = amount.replace(/\[/g, '').replace(/\]/g, '');
+
+        arr=arr.split(",");
+        don    = don.split(",").map(Number);
+        nodone = nodone.split(",").map(Number);
+        mount = mount.split(",").map(Number);
+        console.log(nodone)
+        var data=[];
+        console.log(nodone.length)
+        for (var i =0;i<nodone.length;i++) {
+             var row1 = {};
+                row1.point = {
+                    xAxis: 0,
+                    yAxis: 0,
+                    x: i,
+                    y: (don[i] + nodone[i]),
+                };
+                row1.text = 'label_amount: ' + mount[i].toString();
+                data.push(row1)
+        }
+
+        console.log(data)
+        var chart = Highcharts.chart('container1' +
+            '', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: '用户标注信息统计'
+            },
+            credits: {
+                enabled: false
+            },
+
+            xAxis: {
+                categories: arr 
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '标注图片总数'
+                }
+            },
+            legend: {
+                /* 图例显示顺序反转
+                 * 这是因为堆叠的顺序默认是反转的，可以设置
+                 * yAxis.reversedStacks = false 来达到类似的效果
+                 */
+                reversed: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+            series: [{
+                name: '未标注图片数',
+                data: nodone
+            }, {
+                name: '已标注图片数',
+                data: don
+            }],
+
+            annotations: [{
+                labelOptions: {
+              //     shape: 'rec',
+                align: 'left  ',
+                anchorY :"top",
+                anchorX :"left",
+                    // justify: false,
+                    // crop: true,
+                backgroundColor: 'rgba(255,255,255,0.5)',
+                verticalAlign: 'bottom',
+                style: {
+                    color:'red',
+                    fontSize: '1.0em',
+                    textOutline: '1px white'},
+                    y: 15,
+                    x: 15
+                },
+                labels: data
+            }]
+            });
+
+        </script>
+</body>
+
+</html>
