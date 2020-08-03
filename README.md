@@ -72,7 +72,7 @@
 如果觉得我们的工具对你们的项目或者工作有用，请引用：
 ```
 @article{gao2020nwpu,
-  title={NWPU-Crowd: A Large-Scale Benchmark for Crowd Counting},
+  title={NWPU-Crowd: A Large-Scale Benchmark for Crowd Counting and Localization},
   author={Wang, Qi and Gao, Junyu and Lin, Wei and Li, Xuelong},
   journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
   doi={10.1109/TPAMI.2020.3013269},
