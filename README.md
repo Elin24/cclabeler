@@ -17,6 +17,7 @@
 
 - Python 3.+
 - Django (`pip install django`)
+- nginx（如果并发较大，建议安装）
 
 ## 如何运行
 
