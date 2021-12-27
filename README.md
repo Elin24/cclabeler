@@ -56,7 +56,7 @@ For the labeller userI, all images are listed in user in /users/userI.json
 
 For user1 : IMG_6.jpg, IMG_17.jpg, IMG_52.jpg, IMG_57.jpg, IMG_60.jpg, IMG_76.jpg, IMG_83.jpg, IMG_197.jpg, IMG_229.jpg, IMG_255.jpg
 
-For user22 : IMG_294.jpg, IMG_308.jpg, IMG_319.jpg, IMG_328.jpg, jpg IMG_339.jpg, IMG_345.jpg, IMG_350.jpg, IMG_389.jpg, IMG_397.jpg
+For user22 : IMG_294.jpg, IMG_308.jpg, IMG_319.jpg, IMG_328.jpg, IMG_339.jpg, IMG_345.jpg, IMG_350.jpg, IMG_389.jpg, IMG_397.jpg
 
 
 ## Summary (statistics)
