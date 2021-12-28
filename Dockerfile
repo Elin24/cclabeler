@@ -1,11 +1,11 @@
 FROM python:3.9.9
+LABEL maintainer="datalab-mi"
+
+RUN mkdir /workspace && chown -R 42420:42420 /workspace
 WORKDIR /workspace
-ADD . /workspace
-RUN pip install -r requirements.txt
-RUN git clone https://github.com/fabricejourdan/cclabeler.git
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN chown -R 42420:42420 /workspace
-ENV HOME=/workspace
+COPY . .
 
-WORKDIR /workspace/cclabeler
 CMD [ "python" , "manage.py", "runserver" ,"0.0.0.0:8000" ]
