@@ -10,7 +10,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
         with:
-          ref: my-branchref: feat/cli
+          ref: feat/cli
       - name: Push to GitHub Container Registery
         uses: docker/build-push-action@v1
         with:
