@@ -176,6 +176,9 @@ def check_new_images():
                     userdata['data'].append(id_image)
                     nb_images_add_to_current_player += 1
                     print('user :',userjs, 'nb:',nb_images_add_to_current_player, ' - add ', id_image, ' -img restant à affecter:', len(images_to_add))
-            with open(os.path.join(userdir, userjs), 'w+') as f:
-                json.dump(dict(userdata), f)
-            print('MAJ user :', userjs, 'nb_images :', len(userdata['data']), 'images :', userdata['data'])
+            if nb_images_add_to_current_player>0:
+                with open(os.path.join(userdir, userjs), 'w+') as f:
+                    json.dump(dict(userdata), f)
+                print("Mise à jour de l'utilisateur : ", userjs, '- nb_images :', len(userdata['data']), 'images :', userdata['data'])
+            else:
+                print("Aucune mise à jour de l'utilisateur : ", userjs)
