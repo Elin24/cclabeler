@@ -1,0 +1,23 @@
+name: Deploy the app to ovhai container
+on:
+  push:
+    branches:
+      - feat/cli
+
+env:
+  OVH_REGION: gra7
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install ovhai command
+        run: |
+          wget https://cli.${{ env.OVH_REGION }}.training.ai.cloud.ovh.net/ovhai-linux.zip
+          unzip ovhai-linux.zip
+          mkdir -p $HOME/bin
+          mv ovhai $HOME/bin/ovhai
+          export PATH=$PATH:$HOME/bin/
+
+          ovhai login -p ${{ secrets.OVH_PSWD }} -u ${{ secrets.OVH_USER }}
+
+          ovhai job run --default-http-port 8000 --cpu 4 ghcr.io/datalab-mi/cclabeler:feat-cli
