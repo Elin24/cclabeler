@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import json
 import os
+import math
 from . import settings
+from . import utils
 from PIL import Image
 
 userdir =  os.path.join(settings.BASE_DIR, "users")
@@ -137,3 +138,44 @@ class Player():
                     label[k] = v / h
             labels[i] = label
         return labels
+
+
+def check_new_images():
+    print('Vérification des images ...')
+    userdir = utils.userdir
+    imgdir = utils.imgdir
+    nb_users = 0
+    all_data = []
+    for userjs in os.listdir(userdir):
+        with open(os.path.join(userdir, userjs)) as f:
+            nb_users += 1
+            userdata = json.load(f)
+            print('user :', userjs, 'nb_images :', len(userdata['data']), 'images :', userdata['data'])
+            for img in userdata['data']:
+                all_data.append(img+'.jpg')
+    print('nb_users:', nb_users, 'nb_total_images:',len(all_data), 'images :', all_data)
+
+    all_images = os.listdir(imgdir)
+    print('Répertoire images - nb_images :', len(all_images), 'images :', all_images)
+    images_to_add = [element for element in all_images if element not in all_data]
+
+    if len(images_to_add)==0:
+        print('Aucune nouvelle image!')
+    else:
+        print("{} nouvelle(s) image(s) à affecter sur {} utilisateurs".format(len(images_to_add),nb_users ), ' :', images_to_add)
+        nb_images_per_player = math.ceil(len(images_to_add)/nb_users)
+        print("Nombre d'images par utilisateur :", nb_images_per_player)
+        for userjs in os.listdir(userdir):
+            with open(os.path.join(userdir, userjs)) as f:
+                userdata = json.load(f)
+                nb_images_add_to_current_player = 0
+                while len(images_to_add)>0 and nb_images_add_to_current_player<nb_images_per_player:
+                    removed_image = images_to_add.pop(0)
+                    tmp = removed_image.split('.')
+                    id_image = ''.join(tmp[0:-1])
+                    userdata['data'].append(id_image)
+                    nb_images_add_to_current_player += 1
+                    print('user :',userjs, 'nb:',nb_images_add_to_current_player, ' - add ', id_image, ' -img restant à affecter:', len(images_to_add))
+            with open(os.path.join(userdir, userjs), 'w+') as f:
+                json.dump(dict(userdata), f)
+            print('MAJ user :', userjs, 'nb_images :', len(userdata['data']), 'images :', userdata['data'])
