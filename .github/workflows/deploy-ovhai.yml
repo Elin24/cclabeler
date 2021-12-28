@@ -5,7 +5,7 @@ on:
       - feat/cli
 
 env:
-  OVH_REGION: gra7
+  OVH_REGION: GRA
 jobs:
   deploy:
     runs-on: ubuntu-latest
