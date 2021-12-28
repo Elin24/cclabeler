@@ -21,3 +21,5 @@ jobs:
           ovhai login -p ${{ secrets.OVH_PSWD }} -u ${{ secrets.OVH_USER }}
 
           ovhai job run --default-http-port 8000 --cpu 4 ghcr.io/datalab-mi/cclabeler:feat-cli
+
+          echo "::set-output name=ovh-url::https://ovh.com\n"
