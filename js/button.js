@@ -318,7 +318,7 @@ var wslider = $("#wslider").slider({tooltip: 'hide'})
     .data('slider');
 
 $('#pc-red').click(()=>{
-    labelLineColor = 'red';
+    labelLineColor = '#FF0000';
     runDraw();
 });
 $('#pc-green').click(()=>{
