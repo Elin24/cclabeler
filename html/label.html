@@ -39,8 +39,8 @@
             </div>
         </div>
         <h4></h4>
-        <button type="button" id="opbox" class="btn btn-info"><img width="20" height="20" src="static/rectangle.svg" />
-            &nbsp; box label</button>
+        <!--<button type="button" id="opbox" class="btn btn-info"><img width="20" height="20" src="static/rectangle.svg" />
+            &nbsp; box label</button>-->
         <button type="button" id="oppoint" class="btn btn-info"><img width="20" height="20" src="static/point.svg" />
             &nbsp; point</button>
         <button type="button" id="oprectify" class="btn btn-info"><img width="20" height="20"
@@ -53,7 +53,7 @@
             <div class="col-sm-4"><b>point size:</b></div>
             <div class="col-sm-8">
                 <input id="wslider" data-slider-id='ex1Slider' type="text" data-slider-min="5" data-slider-max="40"
-                    data-slider-step="1" data-slider-value="15" />
+                    data-slider-step="1" data-slider-value="5" />
             </div>
             <div class="col-sm-4"><b>point color:</b></div>
             <div class="col-sm-8">
@@ -67,6 +67,7 @@
         <div id="unfinished" class="hide alert alert-warning">UNFINISHED</div>
     </div>
     <div class="right">
+            <!--<div><b>{{ imgprop.name }} - {{ imgprop.width }} x {{ imgprop.height }}  - {{ imgprop.size }} Ko</b></div>-->
         <canvas id="cvs" width="1440" height="900">
             悲剧了，你的浏览器不支持Canvas？！赶快换一个吧！！
         </canvas>

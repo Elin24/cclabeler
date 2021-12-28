@@ -39,6 +39,7 @@ class Player():
         return label
     
     def save(self, imgid, labels, marks):
+        print('***utils - save***')
         labels = self.absLabel(imgid, labels)
         boxes, points = [], []
         for label in labels:
@@ -46,7 +47,7 @@ class Player():
                 boxes.append(label)
             elif len(label) == 2:
                 points.append(label)
-
+        print(resdir, imgid + '.json')
         with open(os.path.join(resdir, imgid + '.json'), 'w+') as f:
             json.dump(dict(
                 img_id = imgid + '.jpg',
@@ -139,6 +140,13 @@ class Player():
             labels[i] = label
         return labels
 
+    # def getImageProperties(self, imgid):
+    #     image_name = imgid + ".jpg"
+    #     img = Image.open(os.path.join(imgdir, imgid + '.jpg'))
+    #     image_width, image_height = img.size
+    #     image_size = os.path.getsize(os.path.join(imgdir, imgid + '.jpg'))
+    #     image_size = round(image_size/1024.)
+    #     return image_name, image_width, image_height, image_size
 
 def check_new_images():
     print('Vérification des images ...')

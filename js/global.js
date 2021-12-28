@@ -183,8 +183,8 @@ var labelStage = null;
 var labelStatus = false; // 0: no, 1: draw;
 var rectifyType = 0;
 var rectifyIdx = -1;
-var labelLineWidth = 15;
-var labelLineColor = '#f00';
+var labelLineWidth = 5;
+var labelLineColor = '#FF0000';
 const labelRectifyWidth = 4;
 const cursors = ['default', 'n-resize', 'e-resize', 's-resize', 'w-resize', 'move'];
 
@@ -410,5 +410,5 @@ window.onload = function () {
 
     setInterval(function() {
         save();
-    }, 20 * 1000);
+    }, 60 * 1000);
 };
