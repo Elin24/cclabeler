@@ -1,8 +1,8 @@
 name: Stop ovhai job container
 on:
-  push:
-    branches:
-      - feat/cli
+  schedule:
+    - cron:  '0 0 * * *'
+
 
 env:
   OVH_REGION: GRA
@@ -26,4 +26,4 @@ jobs:
           ovhai job stop ${{ secrets.OVH_JOB_ID }} > job.json
           echo "::set-output name=OVH_JOB_URL::$(cat job.json | jq -r '.status.jobUrl')"
       - name: get url
-        run: echo OVH_JOB_URL
+        run: echo ${{ steps.stop.outputs.OVH_JOB_URL }}
