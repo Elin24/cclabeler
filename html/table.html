@@ -38,15 +38,15 @@
                         {% for row in cdata %}
                         <tr>
                             {% for d in row  %}
-                            {% ifequal d.tag 1 %}
+                            {% if d.tag == 1 %}
                             <td class="btn-success">{{ d.data }}</td>
-                            {% endifequal %}
-                            {% ifequal d.tag -1 %}
+                            {% endif %}
+                            {% if d.tag == -1 %}
                             <td class="btn-warning">{{ d.data }}</td>
-                            {% endifequal %}
-                            {% ifequal d.tag 0 %}
+                            {% endif %}
+                            {% if d.tag == 0 %}
                             <td class="btn-default">{{ d.data }}</td>
-                            {% endifequal %}
+                            {% endif %}
                             {% endfor %}
                         </tr>
                         {% endfor %}
