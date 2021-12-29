@@ -17,9 +17,13 @@ jobs:
           mkdir -p $HOME/bin
           mv ovhai $HOME/bin/ovhai
           export PATH=$PATH:$HOME/bin/
-
+      - name: Login to ovhai
+        run: |
           ovhai login -p ${{ secrets.OVH_PSWD }} -u ${{ secrets.OVH_USER }}
-
+      - name: Deploy to ovhai
+        id: deploy
+        run: |
           ovhai job run --default-http-port 8000 --cpu 4 ghcr.io/datalab-mi/cclabeler:feat-cli
-
-          echo "::set-output name=ovh-url::https://ovh.com\n"
+          echo "::set-output name=URL::https://ovh.com\n"
+      - name: get url
+        run: echo ${{ steps.deploy.outputs.URL }}
