@@ -16,7 +16,7 @@ jobs:
           unzip ovhai-linux.zip
           mkdir -p $HOME/bin
           mv ovhai $HOME/bin/ovhai
-          export PATH=$PATH:$HOME/bin/
+          echo "$PATH:$HOME/bin/" >> $GITHUB_PATH
       - name: Login to ovhai
         run: |
           ovhai login -p ${{ secrets.OVH_PSWD }} -u ${{ secrets.OVH_USER }}
