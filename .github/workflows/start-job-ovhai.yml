@@ -5,6 +5,8 @@ on:
 
 env:
   OVH_REGION: GRA
+  TAG: master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -22,7 +24,7 @@ jobs:
       - name: Deploy to ovhai
         id: deploy
         run: |
-          ovhai job run --default-http-port 8000 --cpu 4 -o json ghcr.io/datalab-mi/cclabeler:feat-cli > job.json
+          ovhai job run --default-http-port 8000 --cpu 4 -o json ghcr.io/datalab-mi/cclabeler:${{ env.TAG }}-cli > job.json
           echo "::set-output name=OVH_JOB_ID::$(cat job.json | jq -r '.id')"
       - name: get url
         run: echo https://${{ steps.deploy.outputs.OVH_JOB_ID }}.job.gra.training.ai.cloud.ovh.net
