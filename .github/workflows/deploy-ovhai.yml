@@ -23,7 +23,15 @@ jobs:
       - name: Deploy to ovhai
         id: deploy
         run: |
-          ovhai job run --default-http-port 8000 --cpu 4 ghcr.io/datalab-mi/cclabeler:feat-cli
-          echo "::set-output name=URL::https://ovh.com\n"
+          ovhai job run --default-http-port 8000 --cpu 4 -o json ghcr.io/datalab-mi/cclabeler:feat-cli > job.json
+          echo "::set-output name=OVH_JOB_URL::$(cat job.json | jq -r '.status.jobUrl')"
       - name: get url
-        run: echo ${{ steps.deploy.outputs.URL }}
+        run: echo ${{ steps.deploy.outputs.OVH_JOB_URL }}
+      - name: persist job url
+        run: |
+          curl -X POST \
+          -H 'x-api-key: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}' \
+          -H 'x-github-repo: https://github.com/datalab-mi/cclabeler' \
+          -H 'content-type: application/json' \
+          -d '{ "value": "${{ steps.deploy.outputs.OVH_JOB_URL }}" }' \
+          'https://persistent.aaim.io/api/values/set?key=OVH_JOB_URL&output=plain'
