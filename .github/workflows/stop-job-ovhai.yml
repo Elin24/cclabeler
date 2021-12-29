@@ -22,4 +22,8 @@ jobs:
           ovhai login -p ${{ secrets.OVH_PSWD }} -u ${{ secrets.OVH_USER }}
       - name: Stop job
         id: stop
-        run: ovhai job stop secrets.OVH_JOB_URL > job.json
+        run: |
+          ovhai job stop ${{ secrets.OVH_JOB_ID }} > job.json
+          echo "::set-output name=OVH_JOB_URL::$(cat job.json | jq -r '.status.jobUrl')"
+      - name: get url
+        run: echo OVH_JOB_URL
