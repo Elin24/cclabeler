@@ -61,9 +61,17 @@ function move(direction) {
 }
 
 function changeImgMain(_which) {
+    var density = "";
+    var selected = $("input[type='radio'][name='density']:checked");
+    if (selected.length > 0) {
+        density = selected.val();
+    }
     var sendinfo = {
         user: user,
         imgid: imgpath.split('/')[1].split('.')[0],
+        feature1: $('#feature1').val(),
+        feature2: $('#feature2').val(),
+        density: density,
         marks: JSON.stringify(markStatus.marks),
         labels: JSON.stringify(drawStack.stack),
         which: _which
@@ -75,8 +83,9 @@ function changeImgMain(_which) {
         markStatus = new MarkStatus(result.marks);
         loadImage();
         drawGrid();
+        console.log('JUMP');
         console.log(result);
-        drawSchedule(result.donelen, result.halflen, result.datalen);
+        drawSchedule(result.donelen, result.halflen, result.datalen, result.imgid, result.metadata, result.properties);
     });
 }
 
@@ -158,16 +167,26 @@ $.ctrl('Y', function () {
     }
 });
 $.ctrl('S', function () {
+    var density = "";
+    var selected = $("input[type='radio'][name='density']:checked");
+    if (selected.length > 0) {
+        density = selected.val();
+    }
     var sendinfo = {
         user: user,
         imgid: imgpath.split('/')[1].split('.')[0],
+        feature1: $('#feature1').val(),
+        feature2: $('#feature2').val(),
+        density: density,
         marks: JSON.stringify(markStatus.marks),
         labels: JSON.stringify(drawStack.stack)
     };
     $.post('/save', sendinfo, function (result) {
         if (result.success) {
             var savediv = $('#save');
-            drawSchedule(result.donelen, result.halflen, result.datalen);
+            console.log("SAVE");
+            console.log(result);
+            drawSchedule(result.donelen, result.halflen, result.datalen, result.imgid, result.metadata, result.properties);
             savediv.removeClass('hide');
             setTimeout(() => { savediv.addClass('hide'); }, 1000);
         }
