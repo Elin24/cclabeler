@@ -8,9 +8,9 @@ body {
 .left {
     margin-left: 40px;
     float: left;
-    height: 810px;
+    height: 860px;
     width: 320px;
-    padding-top: 50px;
+    padding-top: 1px;
 }
 .right {
     margin-left: 40px;
