@@ -54,7 +54,7 @@ Password are define in the file /users/{username}.json
 
 user1 : 18 images from ShanghaiTech_B 
 
-user2 : 3 images from ShanghaiTech_B
+user2 : 2 images from ShanghaiTech_B
 
 golden : 10 images from CityUHK-X-BEV dataset (https://github.com/daizhirui/CityUHK-X-BEV)
 
