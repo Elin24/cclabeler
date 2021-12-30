@@ -1,1 +1,1 @@
-{"img_id": "scene_007_1.jpg", "human_num": 4, "boxes": [], "points": [{"x": 197.0, "y": 102.25}, {"x": 330.0, "y": 105.75}, {"x": 294.25, "y": 17.5}, {"x": 132.25, "y": 76.25}]}
+{"img_id": "scene_007_1.jpg", "metadata": [], "properties": {"name": "scene_007_1.jpg", "width": 512, "height": 384, "size": 37}, "human_num": 4, "boxes": [], "points": [{"x": 197.0, "y": 102.25}, {"x": 330.0, "y": 105.75}, {"x": 294.25, "y": 17.5}, {"x": 132.25, "y": 76.25}]}
