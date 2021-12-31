@@ -1,13 +1,17 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, HttpResponseRedirect, redirect, reverse
 from django.views.decorators.csrf import csrf_exempt
+
 import json
+from pathlib import Path
 import os
 from functools import reduce
 
 from . import utils
+from .forms import UploadFileForm
 
 Player = utils.Player
+
 
 
 def login(request, errorlogin=0, nologin=0):
@@ -152,12 +156,15 @@ def table(request):
     player = Player(name)
     if not player.testPsd(pasd):
         return login(request, errorlogin=1)
+
+    form = UploadFileForm()
+
     context = dict(
         username=name,
-        cdata=makeTable(player)
-
+        cdata=makeTable(player),
+        form=form,
+        submitted=False
     )
-
     return render(request, 'table.html', context)
 
 
@@ -242,3 +249,50 @@ def summary(request):
         pabove4000=labelLevel[6]
     )
     return render(request, 'summary.html', context)
+
+def image_view(request):
+
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Successful")
+    else:
+        form = ImageForm()
+    return render(request, 'image_upload.html', {'form' : form})
+
+
+def success(request):
+    return HttpResponse('successfuflly uploaded')
+
+@csrf_exempt
+def upload(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            msg = handle_uploaded_file(request.FILES['file'], str(request.FILES['file']), str(request.POST['user']))
+            # Redirect to previous page
+            # TODO: pass user/password to prevent from asking it again
+            # return redirect(request.META['HTTP_REFERER'])
+            return HttpResponse(msg)
+        else:
+            return HttpResponse("error")
+
+
+def handle_uploaded_file(file, filename, user):
+    # Allocate the user
+    path_user_json = Path(utils.userdir)/ user
+    with path_user_json.open(encoding="UTF-8") as source:
+        user_json = json.load(source)
+    if Path(filename).stem in user_json["data"]:
+        return "The image exists in %s"% user
+    user_json["data"] += [str(Path(filename).stem)]
+    with path_user_json.open("w", encoding="UTF-8") as target:
+        json.dump(user_json, target)
+
+    # Save image
+    with open(Path(utils.imgdir)/filename, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+    return "Success"
