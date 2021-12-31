@@ -271,7 +271,9 @@ def upload(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            msg = handle_uploaded_file(request.FILES['file'], str(request.FILES['file']), str(request.POST['user']))
+            msg = ''
+            for f in request.FILES.getlist('file'): #myfile is the name of your html file button
+                msg += handle_uploaded_file(f, str(f.name), str(request.POST['user']))
             # Redirect to previous page
             # TODO: pass user/password to prevent from asking it again
             # return redirect(request.META['HTTP_REFERER'])
@@ -286,7 +288,7 @@ def handle_uploaded_file(file, filename, user):
     with path_user_json.open(encoding="UTF-8") as source:
         user_json = json.load(source)
     if Path(filename).stem in user_json["data"]:
-        return "The image exists in %s"% user
+        return "The image %s exists in %s \n" % (filename,user)
     user_json["data"] += [str(Path(filename).stem)]
     with path_user_json.open("w", encoding="UTF-8") as target:
         json.dump(user_json, target)
