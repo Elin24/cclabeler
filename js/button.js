@@ -61,7 +61,6 @@ function move(direction) {
 }
 
 function changeImgMain(_which) {
-    console.log('changeImgMain');
     var density = "";
     var selected = $("input[type='radio'][name='density']:checked");
     if (selected.length > 0) {
@@ -84,7 +83,7 @@ function changeImgMain(_which) {
         markStatus = new MarkStatus(result.marks);
         loadImage();
         drawGrid();
-        console.log('JUMP');
+        console.log('/jump');
         console.log(result);
         drawSchedule(result.donelen, result.halflen, result.datalen, result.image_metadata, result.image_properties);
     });
@@ -145,7 +144,6 @@ $.ctrl = function (key, callback, args) {
 };
 
 $.ctrl('Z', function () {
-    console.log("CTRL+Z");
     var ope = opeStack.back();
     if (ope == null) return;
     if (ope.stackType == 'mark') {
@@ -158,7 +156,6 @@ $.ctrl('Z', function () {
 });
 
 $.ctrl('Y', function () {
-    console.log("CTRL+Y");
     var ope = opeStack.forward();
     if (ope == null) return;
     if (ope.stackType == 'mark') {
@@ -188,7 +185,7 @@ $.ctrl('S', function () {
     $.post('/save', sendinfo, function (result) {
         if (result.success) {
             var savediv = $('#save');
-            console.log("SAVE");
+            console.log("/save");
             console.log(result);
             drawSchedule(result.donelen, result.halflen, result.datalen, result.image_metadata, result.image_properties);
             savediv.removeClass('hide');

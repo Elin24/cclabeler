@@ -105,9 +105,6 @@
 
         function drawSchedule(done, half, data, image_metadata, image_properties) {
 
-            console.log("image_metadata:")
-            console.log(image_metadata)
-
             $('.left .progress .progress-bar-success').width(String((done / data) * 100) + '%');
             $('.left .progress .progress-bar-warning').width(String((half / data) * 100) + '%');
 
