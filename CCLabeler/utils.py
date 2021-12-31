@@ -61,21 +61,27 @@ class Player():
             print('result:', result)
         with open(os.path.join(markdir, imgid + '.json'), 'w+') as f:
             json.dump(marks, f)
-
+        print('self.done1:', self.done)
+        print('self.half1:', self.half)
+        print('imgid:', imgid)
         marksum = sum(marks)
         if marksum <= 0:
+            print('01')
             pass
         elif marksum < len(marks):
+            print('02')
             if imgid in self.done:
                 self.done.remove(imgid)
             if imgid not in self.half:
-                self.half += imgid
+                self.half += [imgid]
         else:
+            print('03')
             if imgid in self.half:
                 self.half.remove(imgid)
             if imgid not in self.done:
-                self.done += imgid
-
+                self.done += [imgid]
+        print('self.done2:', self.done)
+        print('self.half2:', self.half)
         with open(os.path.join(userdir, self.name + '.json'), 'w+') as f:
             json.dump(dict(
                 password=self.password,
@@ -223,21 +229,23 @@ def check_new_images():
         nb_images_per_player = math.ceil(len(images_to_add) / nb_users)
         print("Nombre d'images par utilisateur :", nb_images_per_player)
         for userjs in os.listdir(userdir):
-            with open(os.path.join(userdir, userjs)) as f:
-                userdata = json.load(f)
-                nb_images_add_to_current_player = 0
-                while len(images_to_add) > 0 and nb_images_add_to_current_player < nb_images_per_player:
-                    removed_image = images_to_add.pop(0)
-                    tmp = removed_image.split('.')
-                    id_image = ''.join(tmp[0:-1])
-                    userdata['data'].append(id_image)
-                    nb_images_add_to_current_player += 1
-                    print('user :', userjs, 'nb:', nb_images_add_to_current_player, ' - add ', id_image,
-                          ' -img restant à affecter:', len(images_to_add))
-            if nb_images_add_to_current_player > 0:
-                with open(os.path.join(userdir, userjs), 'w+') as f:
-                    json.dump(dict(userdata), f)
-                print("Mise à jour de l'utilisateur : ", userjs, '- nb_images :', len(userdata['data']), 'images :',
-                      userdata['data'])
-            else:
-                print("Aucune mise à jour de l'utilisateur : ", userjs)
+            user_name = userjs.replace('.json', '').lower()
+            if user_name != "golden":
+                with open(os.path.join(userdir, userjs)) as f:
+                    userdata = json.load(f)
+                    nb_images_add_to_current_player = 0
+                    while len(images_to_add) > 0 and nb_images_add_to_current_player < nb_images_per_player:
+                        removed_image = images_to_add.pop(0)
+                        tmp = removed_image.split('.')
+                        id_image = ''.join(tmp[0:-1])
+                        userdata['data'].append(id_image)
+                        nb_images_add_to_current_player += 1
+                        print('user :', userjs, 'nb:', nb_images_add_to_current_player, ' - add ', id_image,
+                              ' -img restant à affecter:', len(images_to_add))
+                if nb_images_add_to_current_player > 0:
+                    with open(os.path.join(userdir, userjs), 'w+') as f:
+                        json.dump(dict(userdata), f)
+                    print("Mise à jour de l'utilisateur : ", userjs, '- nb_images :', len(userdata['data']), 'images :',
+                          userdata['data'])
+                else:
+                    print("Aucune mise à jour de l'utilisateur : ", userjs)
