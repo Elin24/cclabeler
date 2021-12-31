@@ -210,7 +210,6 @@ Box.prototype.draw = function (rectify = false) {
     var boxw = Math.abs(this.sx - this.ex);
     var boxh = Math.abs(this.sy - this.ey);
     drawRect(ctx, posx, posy, boxw, boxh, labelLineColor, null, labelLineWidth);
-    console.log('linecolor:', labelLineColor);
     if (rectify) {
         ctx.save();
         ctx.setLineDash([5, 10]);
@@ -399,7 +398,7 @@ function runDraw() {
         }
         rectifyOperation();
     } else {
-        console.log("run");
+        /***console.log("run");**/
         drawStack.runStack();
     }
 }

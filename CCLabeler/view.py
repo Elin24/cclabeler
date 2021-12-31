@@ -17,12 +17,11 @@ def login(request, errorlogin=0, nologin=0):
 
 @csrf_exempt
 def label(request):
-    print('***view label***')
     name = request.POST.get('user')
-    imgid = request.POST.get('imgid')
     if (name == None):
         return login(request)
     player = Player(name)
+    imgid = request.POST.get('imgid')
     if imgid not in player.data:
         context = dict(
             username=name,
@@ -31,58 +30,66 @@ def label(request):
         return render(request, 'table.html', context)
     drawStack = json.dumps(player.getLabels(imgid))
     marks = player.getMarks(imgid, context=False)
-
-    # image_name, image_width, image_height, image_size = player.getImageProperties(imgid)
-    # imgprop = {"name": image_name, "width": image_width, "height": image_height, "size": image_size}
-    # imgprop = dict(
-    #         name=image_name,
-    #         width=image_width,
-    #         height=image_height,
-    #         size=image_size
-    #     )
-    # print('label imgprop:', imgprop)
+    image_metadata = player.getMetadata(imgid)
+    image_properties = player.getProperties(imgid)
+    # checked = {"feature1_checked": "", "feature2_checked": "", "density_sparse_checked": "",
+    #            "density_dense_checked": ""}
+    # for m in image_metadata:
+    #     checked[m + "_checked"] = "checked"
+    #     print("checked:", checked)
+    # print("image_metadata:", type(image_metadata),image_metadata)
     context = dict(
         imgid=imgid,
-        # imgprop=imgprop,
+        image_metadata=json.dumps(image_metadata),
+        image_properties=json.dumps(image_properties),
         user=name,
         drawStack=drawStack,
         labelMember=player.name,
         marks=marks,
+        # checked=checked,
         datalen=len(player.data),
         halflen=len(player.half),
         donelen=len(player.done)
     )
+    print('view - label - context:', context)
     return render(request, 'label.html', context)
 
 
 @csrf_exempt
 def save(request, returnResponse=True):
-    print('***view save***')
+    print('view - save - request.POST:', request.POST)
+
     name = request.POST.get('user')
     player = Player(name)
+
     imgid = request.POST.get('imgid')
     marks = json.loads(request.POST.get('marks'))
     labels = json.loads(request.POST.get('labels'))
-    player.save(imgid, labels, marks)
+    image_properties = player.getProperties(imgid)
 
-    # image_name, image_width, image_height, image_size = player.getImageProperties(imgid)
-    # # imgprop = {"name": image_name, "width": image_width, "height": image_height, "size": image_size}
-    # imgprop = dict(
-    #         name=image_name,
-    #         width=image_width,
-    #         height=image_height,
-    #         size=image_size
-    #     )
-    # print('save imgprop:', imgprop)
+    image_metadata = []
+    feature1 = request.POST.get("feature1")
+    if feature1 is not None:
+        image_metadata.append("feature1")
+    feature2 = request.POST.get("feature2")
+    if feature2 is not None:
+        image_metadata.append("feature2")
+    density = request.POST.get("density")
+    if density is not None and density != '':
+        image_metadata.append("density_" + density)
+    player.save(imgid, labels, marks, image_metadata, image_properties)
 
     if returnResponse:
         context = dict(
             success=True,
-            # imgprop=imgprop,
+            imgid=imgid,
+            image_metadata=image_metadata,
+            image_properties=image_properties,
             datalen=len(player.data),
             halflen=len(player.half),
             donelen=len(player.done)
         )
+        print('view - save - context:', context)
         return HttpResponse(json.dumps(context), content_type='application/json')
     else:
         return player, imgid
@@ -90,32 +97,29 @@ def save(request, returnResponse=True):
 
 @csrf_exempt
 def jump(request):
-    print('***view jump***')
+    print('view - jump- request.POST:',request.POST)
     player, imgid = save(request, returnResponse=False)
+
     which = int(request.POST.get('which'))
+    # print('view - jump - which:', which)
     nimgid = player.getWhich(imgid, which)
+
     ndrawStack = player.getLabels(nimgid)
     nmarks = player.getMarks(nimgid)
-
-    # image_name, image_width, image_height, image_size = player.getImageProperties(nimgid)
-    # # imgprop = {"name": image_name, "width": image_width, "height": image_height, "size": image_size}
-    # imgprop = dict(
-    #         name=image_name,
-    #         width=image_width,
-    #         height=image_height,
-    #         size=image_size
-    #     )
-    # print('jump imgprop:', imgprop)
+    nimage_metadata = player.getMetadata(nimgid)
+    nimage_properties = player.getProperties(nimgid)
 
     context = dict(
         imgid=nimgid,
-        # imgprop=imgprop,
+        image_metadata=nimage_metadata,
+        image_properties=nimage_properties,
         drawStack=ndrawStack,
         marks=nmarks,
         datalen=len(player.data),
         halflen=len(player.half),
         donelen=len(player.done)
     )
+    print('view - jump - context:', context)
     return HttpResponse(json.dumps(context), content_type='application/json')
 
 
@@ -143,7 +147,6 @@ def makeTable(player):
 def table(request):
     name = request.POST.get('user')
     pasd = request.POST.get('password')
-    # print(name)
     if (name == None):
         return login(request)
     player = Player(name)
