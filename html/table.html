@@ -22,6 +22,20 @@
             text-align: center;
             text-transform: uppercase;
         }
+
+        form {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        form p {
+          margin: 0 0 0 0;
+          display: inline-block;
+        }
+
     </style>
 </head>
 
@@ -55,8 +69,8 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div class="container">
+
+
     {% if submitted %}
     <p class="success">
        Your message was submitted successfully. Thank you.
@@ -65,11 +79,10 @@
     <form action="/upload/" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" value="Upload File" class="btn btn-info" >Send</button>
+        <button type="submit" value="Upload File" class="btn btn-info">Send</button>
     </form>
     {% endif %}
     </div>
-
     <script>
         $('td').click(function () {
             var form = '<form action="/label" method="POST">' +
