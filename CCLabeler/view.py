@@ -1,13 +1,16 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, HttpResponseRedirect, redirect, reverse
 from django.views.decorators.csrf import csrf_exempt
+
 import json
 import os
 from functools import reduce
 
 from . import utils
+from .forms import UploadFileForm
 
 Player = utils.Player
+
 
 
 def login(request, errorlogin=0, nologin=0):
@@ -152,12 +155,15 @@ def table(request):
     player = Player(name)
     if not player.testPsd(pasd):
         return login(request, errorlogin=1)
+
+    form = UploadFileForm()
+
     context = dict(
         username=name,
-        cdata=makeTable(player)
-
+        cdata=makeTable(player),
+        form=form,
+        submitted=False
     )
-
     return render(request, 'table.html', context)
 
 
@@ -242,3 +248,39 @@ def summary(request):
         pabove4000=labelLevel[6]
     )
     return render(request, 'summary.html', context)
+
+def image_view(request):
+
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Successful")
+    else:
+        form = ImageForm()
+    return render(request, 'image_upload.html', {'form' : form})
+
+
+def success(request):
+    return HttpResponse('successfuflly uploaded')
+
+@csrf_exempt
+def upload(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        print(form.is_valid())
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'], str(request.FILES['file']))
+            # Redirect to previous page
+            # TODO: pass user/password to prevent from asking it again
+            return redirect(request.META['HTTP_REFERER'])
+        else:
+            return HttpResponse("error")
+
+
+def handle_uploaded_file(file, filename):
+
+    with open(utils.imgdir + filename, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)

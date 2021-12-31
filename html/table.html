@@ -56,6 +56,20 @@
             </div>
         </div>
     </div>
+    <div class="container">
+    {% if submitted %}
+    <p class="success">
+       Your message was submitted successfully. Thank you.
+    </p>
+    {% else %}
+    <form action="/upload/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" value="Upload File" class="btn btn-info" >Send</button>
+    </form>
+    {% endif %}
+    </div>
+
     <script>
         $('td').click(function () {
             var form = '<form action="/label" method="POST">' +
