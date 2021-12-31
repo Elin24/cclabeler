@@ -3,6 +3,7 @@ from django.shortcuts import render, HttpResponseRedirect, redirect, reverse
 from django.views.decorators.csrf import csrf_exempt
 
 import json
+from pathlib import Path
 import os
 from functools import reduce
 
@@ -269,18 +270,29 @@ def success(request):
 def upload(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
-        print(form.is_valid())
         if form.is_valid():
-            handle_uploaded_file(request.FILES['file'], str(request.FILES['file']))
+            msg = handle_uploaded_file(request.FILES['file'], str(request.FILES['file']), str(request.POST['user']))
             # Redirect to previous page
             # TODO: pass user/password to prevent from asking it again
-            return redirect(request.META['HTTP_REFERER'])
+            # return redirect(request.META['HTTP_REFERER'])
+            return HttpResponse(msg)
         else:
             return HttpResponse("error")
 
 
-def handle_uploaded_file(file, filename):
+def handle_uploaded_file(file, filename, user):
+    # Allocate the user
+    path_user_json = Path(utils.userdir)/ user
+    with path_user_json.open(encoding="UTF-8") as source:
+        user_json = json.load(source)
+    if Path(filename).stem in user_json["data"]:
+        return "The image exists in %s"% user
+    user_json["data"] += [str(Path(filename).stem)]
+    with path_user_json.open("w", encoding="UTF-8") as target:
+        json.dump(user_json, target)
 
-    with open(utils.imgdir + filename, 'wb+') as destination:
+    # Save image
+    with open(Path(utils.imgdir)/filename, 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
+    return "Success"
