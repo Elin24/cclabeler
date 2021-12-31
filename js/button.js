@@ -167,7 +167,6 @@ $.ctrl('Y', function () {
     }
 });
 $.ctrl('S', function () {
-    console.log("CTRL+S");
     var density = "";
     var selected = $("input[type='radio'][name='density']:checked");
     if (selected.length > 0) {

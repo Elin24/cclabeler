@@ -47,7 +47,7 @@ class Player():
                 boxes.append(label)
             elif len(label) == 2:
                 points.append(label)
-        print(resdir, imgid + '.json')
+        # print('utils - save - image json file:',os.path.join(resdir, imgid + '.json'))
         with open(os.path.join(resdir, imgid + '.json'), 'w+') as f:
             result = dict(
                 img_id=imgid + '.jpg',
@@ -58,30 +58,25 @@ class Player():
                 points=points
             )
             json.dump(result, f)
-            print('result:', result)
+            # print('result:', result)
         with open(os.path.join(markdir, imgid + '.json'), 'w+') as f:
             json.dump(marks, f)
-        print('self.done1:', self.done)
-        print('self.half1:', self.half)
-        print('imgid:', imgid)
+        # print('self.done1:', self.done)
+        # print('self.half1:', self.half)
+        # print('imgid:', imgid)
         marksum = sum(marks)
         if marksum <= 0:
-            print('01')
             pass
         elif marksum < len(marks):
-            print('02')
             if imgid in self.done:
                 self.done.remove(imgid)
             if imgid not in self.half:
                 self.half += [imgid]
         else:
-            print('03')
             if imgid in self.half:
                 self.half.remove(imgid)
             if imgid not in self.done:
                 self.done += [imgid]
-        print('self.done2:', self.done)
-        print('self.half2:', self.half)
         with open(os.path.join(userdir, self.name + '.json'), 'w+') as f:
             json.dump(dict(
                 password=self.password,
@@ -132,33 +127,26 @@ class Player():
 
     def getMetadata(self, imgid):
         jsonpath = os.path.join(resdir, imgid + '.json')
-        print('01', jsonpath)
         if not os.path.exists(jsonpath):
             return []
-        print('02 ok')
         with open(jsonpath) as f:
             js = json.load(f)
-            print('03', js)
             if 'metadata' in js and isinstance(js['metadata'], list):
                 image_metadata = js['metadata']
-                print('04', image_metadata)
+                # print('utils - getMetadata - image_metadata:', image_metadata)
             else:
                 image_metadata = []
-        print('utils getMetadata image_metadata:', image_metadata)
         return image_metadata
 
     def getProperties(self, imgid):
         jsonpath = os.path.join(resdir, imgid + '.json')
-        print('01', jsonpath)
         if not os.path.exists(jsonpath):
             return []
-        print('02 OK')
         with open(jsonpath) as f:
             js = json.load(f)
-            print('03', js)
             if 'properties' not in js or not isinstance(js['properties'], dict) or js['properties'] == {}:
                 image_properties = self.getImageProperties(imgid)
-                print('utils getProperties properties:', image_properties)
+                print('utils - getProperties - image_properties:', image_properties)
             else:
                 image_properties = js['properties']
         return image_properties

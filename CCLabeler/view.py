@@ -17,8 +17,6 @@ def login(request, errorlogin=0, nologin=0):
 
 @csrf_exempt
 def label(request):
-    print('view label')
-
     name = request.POST.get('user')
     if (name == None):
         return login(request)
@@ -34,12 +32,12 @@ def label(request):
     marks = player.getMarks(imgid, context=False)
     image_metadata = player.getMetadata(imgid)
     image_properties = player.getProperties(imgid)
-    checked = {"feature1_checked": "", "feature2_checked": "", "density_sparse_checked": "",
-               "density_dense_checked": ""}
-    for m in image_metadata:
-        checked[m + "_checked"] = "checked"
-        print("checked:", checked)
-    print("image_metadata:", type(image_metadata),image_metadata)
+    # checked = {"feature1_checked": "", "feature2_checked": "", "density_sparse_checked": "",
+    #            "density_dense_checked": ""}
+    # for m in image_metadata:
+    #     checked[m + "_checked"] = "checked"
+    #     print("checked:", checked)
+    # print("image_metadata:", type(image_metadata),image_metadata)
     context = dict(
         imgid=imgid,
         image_metadata=json.dumps(image_metadata),
@@ -48,18 +46,18 @@ def label(request):
         drawStack=drawStack,
         labelMember=player.name,
         marks=marks,
-        checked=checked,
+        # checked=checked,
         datalen=len(player.data),
         halflen=len(player.half),
         donelen=len(player.done)
     )
-    print('view label context:', context)
+    print('view - label - context:', context)
     return render(request, 'label.html', context)
 
 
 @csrf_exempt
 def save(request, returnResponse=True):
-    print('view save request.POST:', request.POST)
+    print('view - save - request.POST:', request.POST)
 
     name = request.POST.get('user')
     player = Player(name)
@@ -91,7 +89,7 @@ def save(request, returnResponse=True):
             halflen=len(player.half),
             donelen=len(player.done)
         )
-        print('view save context:', context)
+        print('view - save - context:', context)
         return HttpResponse(json.dumps(context), content_type='application/json')
     else:
         return player, imgid
@@ -99,11 +97,11 @@ def save(request, returnResponse=True):
 
 @csrf_exempt
 def jump(request):
-    print('view jump')
+    print('view - jump- request.POST:',request.POST)
     player, imgid = save(request, returnResponse=False)
 
     which = int(request.POST.get('which'))
-    print('view jump which:', which)
+    # print('view - jump - which:', which)
     nimgid = player.getWhich(imgid, which)
 
     ndrawStack = player.getLabels(nimgid)
@@ -121,7 +119,7 @@ def jump(request):
         halflen=len(player.half),
         donelen=len(player.done)
     )
-    print('view jump context:', context)
+    print('view - jump - context:', context)
     return HttpResponse(json.dumps(context), content_type='application/json')
 
 

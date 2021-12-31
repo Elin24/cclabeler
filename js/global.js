@@ -398,7 +398,7 @@ function runDraw() {
         }
         rectifyOperation();
     } else {
-        console.log("run");
+        /***console.log("run");**/
         drawStack.runStack();
     }
 }
