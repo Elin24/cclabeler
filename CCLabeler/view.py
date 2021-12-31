@@ -34,24 +34,21 @@ def label(request):
     marks = player.getMarks(imgid, context=False)
     image_metadata = player.getMetadata(imgid)
     image_properties = player.getProperties(imgid)
-
     checked = {"feature1_checked": "", "feature2_checked": "", "density_sparse_checked": "",
                "density_dense_checked": ""}
-    # for m in image_metadata:
-    #     checked[m + "_checked"] = 'checked="checked"'
-    #     print("checked:", checked)
+    for m in image_metadata:
+        checked[m + "_checked"] = "checked"
+        print("checked:", checked)
+    print("image_metadata:", type(image_metadata),image_metadata)
     context = dict(
         imgid=imgid,
-        image_metadata=image_metadata,
-        image_properties=image_properties,
+        image_metadata=json.dumps(image_metadata),
+        image_properties=json.dumps(image_properties),
         user=name,
         drawStack=drawStack,
         labelMember=player.name,
         marks=marks,
-        feature1_checked=checked['feature1_checked'],
-        feature2_checked=checked['feature2_checked'],
-        density_sparse_checked=checked['density_sparse_checked'],
-        density_dense_checked=checked['density_dense_checked'],
+        checked=checked,
         datalen=len(player.data),
         halflen=len(player.half),
         donelen=len(player.done)
@@ -73,15 +70,15 @@ def save(request, returnResponse=True):
     image_properties = player.getProperties(imgid)
 
     image_metadata = []
-    # feature1 = request.POST.get('feature1')
-    # if feature1 is not None:
-    #     image_metadata.append('feature1')
-    # feature2 = request.POST.get('feature2')
-    # if feature2 is not None:
-    #     image_metadata.append('feature2')
-    # density = request.POST.get('density')
-    # if density is not None and density!='':
-    #     image_metadata.append("density_" + density)
+    feature1 = request.POST.get("feature1")
+    if feature1 is not None:
+        image_metadata.append("feature1")
+    feature2 = request.POST.get("feature2")
+    if feature2 is not None:
+        image_metadata.append("feature2")
+    density = request.POST.get("density")
+    if density is not None and density != '':
+        image_metadata.append("density_" + density)
     player.save(imgid, labels, marks, image_metadata, image_properties)
 
     if returnResponse:

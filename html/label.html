@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="static/favicon.ico" />
+    <link rel="shortcut icon" href="static/favicon.ico"/>
     <title>Labelling page</title>
     <link rel="stylesheet" href="static/style.css">
     <link href="static/bootstrap.min.css" rel="stylesheet">
@@ -29,7 +29,7 @@
     <button type="button" id="nextimg" class="btn btn-info"><img width="20" height="20"
                                                                  src="static/newimg.svg"/></button>
     <div class="progress">
-        progress
+        <!--progress-->
         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0"
              aria-valuemax="100" style="width: 0%;">
             <!-- <span class="sr-only">0% 完成</span> -->
@@ -39,6 +39,7 @@
             <!-- <span class="sr-only">0% 完成（警告）</span> -->
         </div>
     </div>
+    <br>
     <h4></h4>
     <!--<button type="button" id="opbox" class="btn btn-info"><img width="20" height="20" src="static/rectangle.svg" />
         &nbsp; box label</button>-->
@@ -66,18 +67,21 @@
         </div>
         <div class="col-sm-4"><b>features:</b></div>
         <div class="col-sm-8">
-            <div><input type="checkbox" id="feature1" name="feature1" {{ feature1_checked }}> <label for="feature1">feature
+            <div><input type="checkbox" id="feature1" name="feature1"> <label
+                    for="feature1">feature
                 1</label></div>
-            <div><input type="checkbox" id="feature2" name="feature2" {{ feature2_checked }}> <label for="feature2">feature
+            <div><input type="checkbox" id="feature2" name="feature2"> <label
+                    for="feature2">feature
                 2</label></div>
         </div>
         <div class="col-sm-4"><b>density:</b></div>
         <div class="col-sm-8">
             <div>
-                <input type="radio" id="sparse" name="density" value="sparse" {{ density_sparse_checked }}>
-                <label for="sparse">sparse</label>
-                <input type="radio" id="dense" name="density" value="dense" {{ density_dense_checked }}>
-                <label for="dense">dense</label>
+                <input type="radio" id="density_sparse" name="density" value="sparse" {{ checked.density_sparse_checked
+                       }}>
+                <label for="density_sparse">sparse</label>
+                <input type="radio" id="density_dense" name="density" value="dense" {{ checked.density_dense_checked }}>
+                <label for="density_dense">dense</label>
             </div>
         </div>
     </div>
@@ -96,15 +100,46 @@
         var imgpath = "static/{{ imgid }}.jpg";
         var initMarkStatus = {{ marks }};
         var drawStackDict = JSON.parse("{{ drawStack }}".replace(/&quot;/g, '"'));
+        var image_metadata = JSON.parse("{{ image_metadata }}".replace(/&quot;/g, '"'));
+        var image_properties = JSON.parse("{{ image_properties }}".replace(/&quot;/g, '"'));
 
-        function drawSchedule(done, half, data, imgid, metadata, properties) {
-            $('.left .progress .progress-bar-success').width(String(done / data * 100) + '%');
-            $('.left .progress .progress-bar-warning').width(String(half / data * 100) + '%');
+        function drawSchedule(done, half, data, image_metadata, image_properties) {
+
+            console.log("image_metadata:")
+            console.log(image_metadata)
+
+            $('.left .progress .progress-bar-success').width(String((done / data) * 100) + '%');
+            $('.left .progress .progress-bar-warning').width(String((half / data) * 100) + '%');
+
             $('.left h4').text('(' + String(done) + ", " + String(half) + ") / " + String(data));
 
-            $('#image_def').text(String(imgid)+".jpg");
+            img_name = String(image_properties.name)
+            img_width = String(image_properties.width)
+            img_height = String(image_properties.height)
+            img_size = String(image_properties.size)
+            $('#image_def').text(img_name + " - " + img_width + "x" + img_height + " - " + img_size + " Ko");
+
+            $("#feature1").prop("checked", false);
+            $("#feature2").prop("checked", false);
+            $("#density_sparse").prop("checked", false);
+            $("#density_dense").prop("checked", false);
+            $.each( image_metadata, function( index, value ){
+                $("#"+value).prop("checked", true);
+            });
+
         }
-        drawSchedule({{ donelen }}, {{ halflen }}, {{ datalen }}, "{{ imgid }}", "{{ imgid }}", "{{ imgid }}");
+        drawSchedule({{ donelen }}, {{ halflen }}, {{ datalen }}, image_metadata, image_properties);
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
 <script src="static/global.js"></script>

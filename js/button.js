@@ -61,6 +61,7 @@ function move(direction) {
 }
 
 function changeImgMain(_which) {
+    console.log('changeImgMain');
     var density = "";
     var selected = $("input[type='radio'][name='density']:checked");
     if (selected.length > 0) {
@@ -69,8 +70,8 @@ function changeImgMain(_which) {
     var sendinfo = {
         user: user,
         imgid: imgpath.split('/')[1].split('.')[0],
-        feature1: $('#feature1').val(),
-        feature2: $('#feature2').val(),
+        feature1: $("input[type='checkbox'][name='feature1']:checked").val(),
+        feature2: $("input[type='checkbox'][name='feature2']:checked").val(),
         density: density,
         marks: JSON.stringify(markStatus.marks),
         labels: JSON.stringify(drawStack.stack),
@@ -85,7 +86,7 @@ function changeImgMain(_which) {
         drawGrid();
         console.log('JUMP');
         console.log(result);
-        drawSchedule(result.donelen, result.halflen, result.datalen, result.imgid, result.metadata, result.properties);
+        drawSchedule(result.donelen, result.halflen, result.datalen, result.image_metadata, result.image_properties);
     });
 }
 
@@ -144,6 +145,7 @@ $.ctrl = function (key, callback, args) {
 };
 
 $.ctrl('Z', function () {
+    console.log("CTRL+Z");
     var ope = opeStack.back();
     if (ope == null) return;
     if (ope.stackType == 'mark') {
@@ -156,6 +158,7 @@ $.ctrl('Z', function () {
 });
 
 $.ctrl('Y', function () {
+    console.log("CTRL+Y");
     var ope = opeStack.forward();
     if (ope == null) return;
     if (ope.stackType == 'mark') {
@@ -167,6 +170,7 @@ $.ctrl('Y', function () {
     }
 });
 $.ctrl('S', function () {
+    console.log("CTRL+S");
     var density = "";
     var selected = $("input[type='radio'][name='density']:checked");
     if (selected.length > 0) {
@@ -175,8 +179,8 @@ $.ctrl('S', function () {
     var sendinfo = {
         user: user,
         imgid: imgpath.split('/')[1].split('.')[0],
-        feature1: $('#feature1').val(),
-        feature2: $('#feature2').val(),
+        feature1: $("input[type='checkbox'][name='feature1']:checked").val(),
+        feature2: $("input[type='checkbox'][name='feature2']:checked").val(),
         density: density,
         marks: JSON.stringify(markStatus.marks),
         labels: JSON.stringify(drawStack.stack)
@@ -186,7 +190,7 @@ $.ctrl('S', function () {
             var savediv = $('#save');
             console.log("SAVE");
             console.log(result);
-            drawSchedule(result.donelen, result.halflen, result.datalen, result.imgid, result.metadata, result.properties);
+            drawSchedule(result.donelen, result.halflen, result.datalen, result.image_metadata, result.image_properties);
             savediv.removeClass('hide');
             setTimeout(() => { savediv.addClass('hide'); }, 1000);
         }
