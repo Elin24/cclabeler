@@ -6,7 +6,7 @@ from . import settings
 from . import utils
 from PIL import Image
 
-userdir = os.path.join(settings.BASE_DIR, "users")
+userdir = os.path.join(settings.BASE_DIR, "data", "users")
 imgdir = os.path.join(settings.BASE_DIR, "data", "images")
 resdir = os.path.join(settings.BASE_DIR, "data", "jsons")
 markdir = os.path.join(settings.BASE_DIR, "data", "marks")
