@@ -1,0 +1,29 @@
+name: Stop ovhai job container
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+
+
+env:
+  OVH_REGION: GRA
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install ovhai command
+        run: |
+          wget https://cli.${{ env.OVH_REGION }}.training.ai.cloud.ovh.net/ovhai-linux.zip
+          unzip ovhai-linux.zip
+          mkdir -p $HOME/bin
+          mv ovhai $HOME/bin/ovhai
+          echo "$PATH:$HOME/bin/" >> $GITHUB_PATH
+      - name: Login to ovhai
+        run: |
+          ovhai login -p ${{ secrets.OVH_PSWD }} -u ${{ secrets.OVH_USER }}
+      - name: Stop job
+        id: stop
+        run: |
+          ovhai job stop ${{ secrets.OVH_JOB_ID }} > job.json
+          echo "::set-output name=OVH_JOB_URL::$(cat job.json | jq -r '.status.jobUrl')"
+      - name: get url
+        run: echo ${{ steps.stop.outputs.OVH_JOB_URL }}

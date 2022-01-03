@@ -1,0 +1,21 @@
+name: Push Docker image to GitHub container Registery
+on:
+  push:
+    branches:
+      - master
+jobs:
+  push_to_registry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Push to GitHub Container Registery
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          repository: datalab-mi/cclabeler
+          tag_with_ref: true

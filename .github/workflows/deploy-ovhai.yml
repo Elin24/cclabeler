@@ -1,0 +1,41 @@
+name: Deploy the app to ovhai container
+on:
+  push:
+    branches:
+      - feat/cli
+
+env:
+  OVH_REGION: GRA
+  HOSTNAME: labelling.iafoule.fr
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install ovhai command
+        run: |
+          wget https://cli.${{ env.OVH_REGION }}.training.ai.cloud.ovh.net/ovhai-linux.zip
+          unzip ovhai-linux.zip
+          mkdir -p $HOME/bin
+          mv ovhai $HOME/bin/ovhai
+          echo "$PATH:$HOME/bin/" >> $GITHUB_PATH
+      - name: Login to ovhai
+        run: |
+          ovhai login -p ${{ secrets.OVH_PSWD }} -u ${{ secrets.OVH_USER }}
+      - name: Deploy to ovhai
+        id: deploy
+        run: |
+          ovhai job run --default-http-port 8000 --cpu 4 --volume cclabeler-data@gra:/workspace/data:rw --volume cclabeler-users@gra:/workspace/users:rw -o json ghcr.io/datalab-mi/cclabeler:feat-cli > job.json
+          echo "::set-output name=OVH_JOB_ID::$(cat job.json | jq -r '.id')"
+      - name: get url
+        run: echo https://${{ steps.deploy.outputs.OVH_JOB_ID }}.job.gra.training.ai.cloud.ovh.net
+      - name: persist job url
+        run: |
+          curl -X POST \
+          -H 'x-api-key: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}' \
+          -H 'x-github-repo: https://github.com/datalab-mi/cclabeler' \
+          -H 'content-type: application/json' \
+          -d '{ "value": "${{ steps.deploy.outputs.OVH_JOB_ID }}" }' \
+          'https://persistent.aaim.io/api/values/set?key=OVH_JOB_ID&output=plain'
+      - name: redirection with Dynhost from ovh
+        run: |
+          curl "https://iafoule.fr-cclabeler:${{secrets.DYNAHOST_PSWD}}@www.ovh.com/nic/update/?system=dyndns&hostname=${HOSTNAME}&myip=${{ steps.deploy.outputs.OVH_JOB_ID }}"
