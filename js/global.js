@@ -97,7 +97,7 @@ var markStatus = new MarkStatus(initMarkStatus);
 var canvas = document.getElementById("cvs");
 var ctx = canvas.getContext('2d');
 var imgStatus = {
-    border: 400,
+    border: 100,
     image: null,
     offsetx: 0,
     offsety: 0,
