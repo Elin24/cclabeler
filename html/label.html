@@ -65,23 +65,57 @@
             <button type="button" id="pc-green" class="btn btn-success"></button>
             <button type="button" id="pc-orange" class="btn btn-warning"></button>
         </div>
+    </div>
+    <div class="row">
         <div class="col-sm-4"><b>features:</b></div>
         <div class="col-sm-8">
-            <div><input type="checkbox" id="feature1" name="feature1"> <label
-                    for="feature1">feature
-                1</label></div>
-            <div><input type="checkbox" id="feature2" name="feature2"> <label
-                    for="feature2">feature
-                2</label></div>
+            <div><input type="checkbox" id="periodic_pattern" name="pattern"> <label
+                    for="periodic_pattern">
+                periodic pattern</label></div>
+            <div><input type="checkbox" id="uniform_distribution" name="uniform"> <label
+                    for="uniform_distribution">
+                uniform crowd distribution</label></div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-sm-4"><b>density:</b></div>
         <div class="col-sm-8">
             <div>
-                <input type="radio" id="density_sparse" name="density" value="sparse" {{ checked.density_sparse_checked
-                       }}>
+                <input type="radio" id="density_sparse" name="density" value="sparse" {{ checked.density_sparse_checked }}>
                 <label for="density_sparse">sparse</label>
                 <input type="radio" id="density_dense" name="density" value="dense" {{ checked.density_dense_checked }}>
                 <label for="density_dense">dense</label>
+            </div>
+        </div>
+        <div class="col-sm-4"><b>place:</b></div>
+        <div class="col-sm-8">
+            <div>
+                <input type="radio" id="place_indoor" name="place" value="indoor" {{ checked.place_indoor_checked }}>
+                <label for="place_indoor">indoor</label>
+                <input type="radio" id="place_outdoor" name="place" value="outdoor" {{ checked.place_outdoor_checked }}>
+                <label for="place_outdoor">outdoor</label>
+            </div>
+        </div>
+        <div class="col-sm-4"><b>angle:</b></div>
+        <div class="col-sm-8">
+            <div>
+                <input type="radio" id="angle_low" name="angle" value="low" {{ checked.angle_low_checked }}>
+                <label for="angle_low">low</label>
+                <input type="radio" id="angle_middle" name="angle" value="middle" {{ checked.angle_middle_checked }}>
+                <label for="angle_middle">middle</label>
+                <input type="radio" id="angle_high" name="angle" value="high" {{ checked.angle_high_checked }}>
+                <label for="angle_high">high</label>
+            </div>
+        </div>
+        <div class="col-sm-4"><b>position:</b></div>
+        <div class="col-sm-8">
+            <div>
+                <input type="radio" id="position_close" name="position" value="close" {{ checked.position_close_checked }}>
+                <label for="position_close">close</label>
+                <input type="radio" id="position_middle" name="position" value="middle" {{ checked.position_middle_checked }}>
+                <label for="position_middle">middle</label>
+                <input type="radio" id="position_far" name="position" value="far" {{ checked.position_far_checked }}>
+                <label for="position_far">far</label>
             </div>
         </div>
     </div>
@@ -116,28 +150,25 @@
             img_size = String(image_properties.size)
             $('#image_def').text(img_name + " - " + img_width + "x" + img_height + " - " + img_size + " Ko");
 
-            $("#feature1").prop("checked", false);
-            $("#feature2").prop("checked", false);
+            $("#periodic_pattern").prop("checked", false);
+            $("#uniform_distribution").prop("checked", false);
             $("#density_sparse").prop("checked", false);
             $("#density_dense").prop("checked", false);
+            $("#place_indoor").prop("checked", false);
+            $("#place_outdoor").prop("checked", false);
+            $("#anlge_low").prop("checked", false);
+            $("#angle_middle").prop("checked", false);
+            $("#angle_high").prop("checked", false);
+            $("#position_low").prop("checked", false);
+            $("#position_middle").prop("checked", false);
+            $("#position_high").prop("checked", false);
+
             $.each( image_metadata, function( index, value ){
                 $("#"+value).prop("checked", true);
             });
 
         }
         drawSchedule({{ donelen }}, {{ halflen }}, {{ datalen }}, image_metadata, image_properties);
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 <script src="static/global.js"></script>
 <script src="static/label.js"></script>

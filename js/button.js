@@ -62,16 +62,34 @@ function move(direction) {
 
 function changeImgMain(_which) {
     var density = "";
-    var selected = $("input[type='radio'][name='density']:checked");
-    if (selected.length > 0) {
-        density = selected.val();
+    var selectedDensity = $("input[type='radio'][name='density']:checked");
+    if (selectedDensity.length > 0) {
+        density = selectedDensity.val();
+    }
+    var place = "";
+    var selectedPlace = $("input[type='radio'][name='place']:checked");
+    if (selectedPlace.length > 0) {
+        place = selectedPlace.val();
+    }
+    var angle = "";
+    var selectedAngle = $("input[type='radio'][name='angle']:checked");
+    if (selectedAngle.length > 0) {
+        angle = selectedAngle.val();
+    }
+    var position = "";
+    var selectedPosition = $("input[type='radio'][name='position']:checked");
+    if (selectedPosition.length > 0) {
+        position = selectedPosition.val();
     }
     var sendinfo = {
         user: user,
         imgid: imgpath.split('/')[1].split('.')[0],
-        feature1: $("input[type='checkbox'][name='feature1']:checked").val(),
-        feature2: $("input[type='checkbox'][name='feature2']:checked").val(),
+        pattern: $("input[type='checkbox'][name='pattern']:checked").val(),
+        uniform: $("input[type='checkbox'][name='uniform']:checked").val(),
         density: density,
+        place: place,
+        angle: angle,
+        position: position,
         marks: JSON.stringify(markStatus.marks),
         labels: JSON.stringify(drawStack.stack),
         which: _which
@@ -168,16 +186,34 @@ $.ctrl('Y', function () {
 });
 $.ctrl('S', function () {
     var density = "";
-    var selected = $("input[type='radio'][name='density']:checked");
-    if (selected.length > 0) {
-        density = selected.val();
+    var selectedDensity = $("input[type='radio'][name='density']:checked");
+    if (selectedDensity.length > 0) {
+        density = selectedDensity.val();
+    }
+    var place = "";
+    var selectedPlace = $("input[type='radio'][name='place']:checked");
+    if (selectedPlace.length > 0) {
+        place = selectedPlace.val();
+    }
+    var angle = "";
+    var selectedAngle = $("input[type='radio'][name='angle']:checked");
+    if (selectedAngle.length > 0) {
+        angle = selectedAngle.val();
+    }
+    var position = "";
+    var selectedPosition = $("input[type='radio'][name='position']:checked");
+    if (selectedPosition.length > 0) {
+        position = selectedPosition.val();
     }
     var sendinfo = {
         user: user,
         imgid: imgpath.split('/')[1].split('.')[0],
-        feature1: $("input[type='checkbox'][name='feature1']:checked").val(),
-        feature2: $("input[type='checkbox'][name='feature2']:checked").val(),
+        pattern: $("input[type='checkbox'][name='pattern']:checked").val(),
+        uniform: $("input[type='checkbox'][name='uniform']:checked").val(),
         density: density,
+        place: place,
+        angle: angle,
+        position: position,
         marks: JSON.stringify(markStatus.marks),
         labels: JSON.stringify(drawStack.stack)
     };
