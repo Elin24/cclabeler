@@ -51,6 +51,7 @@ body {
     padding-top: 20px;
 }
 
-#lineStyleControler button {
-    width: 32%;
+
+.left .row {
+  padding-top: 20px;
 }

@@ -1,1 +1,1 @@
-{"img_id": "IMG_83.jpg", "metadata": [], "properties": {"name": "IMG_83.jpg", "width": 1024, "height": 768, "size": 142}, "human_num": 0, "boxes": [], "points": []}
+{"img_id": "IMG_83.jpg", "metadata": ["periodic_pattern", "uniform_distribution", "density_sparse", "place_outdoor"], "properties": {"name": "IMG_83.jpg", "width": 1024, "height": 768, "size": 142}, "human_num": 0, "boxes": [], "points": []}

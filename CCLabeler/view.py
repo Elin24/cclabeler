@@ -36,7 +36,7 @@ def label(request):
     marks = player.getMarks(imgid, context=False)
     image_metadata = player.getMetadata(imgid)
     image_properties = player.getProperties(imgid)
-    # checked = {"feature1_checked": "", "feature2_checked": "", "density_sparse_checked": "",
+    # checked = {"pattern_checked": "", "uniform_checked": "", "density_sparse_checked": "",
     #            "density_dense_checked": ""}
     # for m in image_metadata:
     #     checked[m + "_checked"] = "checked"
@@ -72,15 +72,25 @@ def save(request, returnResponse=True):
     image_properties = player.getProperties(imgid)
 
     image_metadata = []
-    feature1 = request.POST.get("feature1")
-    if feature1 is not None:
-        image_metadata.append("feature1")
-    feature2 = request.POST.get("feature2")
-    if feature2 is not None:
-        image_metadata.append("feature2")
+    pattern = request.POST.get("pattern")
+    if pattern is not None:
+        image_metadata.append("periodic_pattern")
+    uniform = request.POST.get("uniform")
+    if uniform is not None:
+        image_metadata.append("uniform_distribution")
     density = request.POST.get("density")
     if density is not None and density != '':
         image_metadata.append("density_" + density)
+    place = request.POST.get("place")
+    if place is not None and place != '':
+        image_metadata.append("place_" + place)
+    angle = request.POST.get("angle")
+    if angle is not None and angle != '':
+        image_metadata.append("angle_" + angle)
+    position = request.POST.get("position")
+    if position is not None and position != '':
+        image_metadata.append("position_" + position)
+
     player.save(imgid, labels, marks, image_metadata, image_properties)
 
     if returnResponse:
