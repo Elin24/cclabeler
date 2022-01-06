@@ -222,13 +222,14 @@ def check_new_images():
     all_data = []
     for userjs in os.listdir(userdir):
         user_name = userjs.replace('.json', '').lower()
-        if user_name not in ["golden", "admin"]:
+        if user_name not in ["admin"]:
             with open(os.path.join(userdir, userjs)) as f:
                 nb_users += 1
                 userdata = json.load(f)
                 print('user :', userjs, 'nb_images :', len(userdata['data']), 'images :', userdata['data'])
                 for img in userdata['data']:
                     all_data.append(img)
+    nb_users = nb_users -1 #Le nombre d'utilisateurs sur lesquels on va répartir les images ne contient pas 'golden'
     print('nb_users:', nb_users, 'nb_total_images:', len(all_data), 'images :', all_data)
 
     all_images = [image for image in os.listdir(imgdir) if os.path.splitext(image)[1] in ['.jpg', '.png', '.jpeg']]
