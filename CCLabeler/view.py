@@ -13,7 +13,6 @@ from .forms import UploadFileForm
 Player = utils.Player
 
 
-
 def login(request, errorlogin=0, nologin=0):
     context = dict(error=errorlogin, nologin=nologin)
     return render(request, 'login.html', context)
@@ -36,12 +35,6 @@ def label(request):
     marks = player.getMarks(imgid, context=False)
     image_metadata = player.getMetadata(imgid)
     image_properties = player.getProperties(imgid)
-    # checked = {"pattern_checked": "", "uniform_checked": "", "density_sparse_checked": "",
-    #            "density_dense_checked": ""}
-    # for m in image_metadata:
-    #     checked[m + "_checked"] = "checked"
-    #     print("checked:", checked)
-    # print("image_metadata:", type(image_metadata),image_metadata)
     context = dict(
         imgid=imgid,
         image_metadata=json.dumps(image_metadata),
@@ -50,7 +43,6 @@ def label(request):
         drawStack=drawStack,
         labelMember=player.name,
         marks=marks,
-        # checked=checked,
         datalen=len(player.data),
         halflen=len(player.half),
         donelen=len(player.done)
@@ -111,7 +103,7 @@ def save(request, returnResponse=True):
 
 @csrf_exempt
 def jump(request):
-    print('view - jump- request.POST:',request.POST)
+    print('view - jump- request.POST:', request.POST)
     player, imgid = save(request, returnResponse=False)
 
     which = int(request.POST.get('which'))
@@ -260,8 +252,8 @@ def summary(request):
     )
     return render(request, 'summary.html', context)
 
-def image_view(request):
 
+def image_view(request):
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
 
@@ -270,11 +262,12 @@ def image_view(request):
             return HttpResponse("Successful")
     else:
         form = ImageForm()
-    return render(request, 'image_upload.html', {'form' : form})
+    return render(request, 'image_upload.html', {'form': form})
 
 
 def success(request):
     return HttpResponse('successfuflly uploaded')
+
 
 @csrf_exempt
 def upload(request):
@@ -282,7 +275,7 @@ def upload(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             msg = ''
-            for f in request.FILES.getlist('file'): #myfile is the name of your html file button
+            for f in request.FILES.getlist('file'):  # myfile is the name of your html file button
                 msg += handle_uploaded_file(f, str(f.name), str(request.POST['user']))
             # Redirect to previous page
             # TODO: pass user/password to prevent from asking it again
@@ -293,18 +286,22 @@ def upload(request):
 
 
 def handle_uploaded_file(file, filename, user):
+    imgid = Path(filename).stem
     # Allocate the user
-    path_user_json = Path(utils.userdir)/ user
+    path_user_json = Path(utils.userdir) / user
     with path_user_json.open(encoding="UTF-8") as source:
         user_json = json.load(source)
-    if Path(filename).stem in user_json["data"]:
-        return "The image %s exists in %s \n" % (filename,user)
+    if imgid in user_json["data"]:
+        return "The image %s exists in %s \n" % (filename, user)
     user_json["data"] += [str(Path(filename).stem)]
     with path_user_json.open("w", encoding="UTF-8") as target:
         json.dump(user_json, target)
 
     # Save image
-    with open(Path(utils.imgdir)/filename, 'wb+') as destination:
+    with open(Path(utils.imgdir) / filename, 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
+
+    utils.init_image_jsons(imgid)
+
     return "Success"

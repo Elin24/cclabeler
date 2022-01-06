@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+from pathlib import Path
 import math
 from . import settings
 from . import utils
@@ -145,7 +146,7 @@ class Player():
         with open(jsonpath) as f:
             js = json.load(f)
             if 'properties' not in js or not isinstance(js['properties'], dict) or js['properties'] == {}:
-                image_properties = self.getImageProperties(imgid)
+                image_properties = getImageProperties(imgid)
                 print('utils - getProperties - image_properties:', image_properties)
             else:
                 image_properties = js['properties']
@@ -175,25 +176,44 @@ class Player():
             labels[i] = label
         return labels
 
-    def getImageProperties(self, imgid):
-        image_name = imgid + ".jpg"
-        img = Image.open(os.path.join(imgdir, imgid + '.jpg'))
-        image_width, image_height = img.size
-        image_size = os.path.getsize(os.path.join(imgdir, imgid + '.jpg'))
-        image_size = round(image_size / 1024.)
-        image_properties = dict(
-            name=image_name,
-            width=image_width,
-            height=image_height,
-            size=image_size
+
+def getImageProperties(imgid):
+    image_name = imgid + ".jpg"
+    img = Image.open(os.path.join(imgdir, imgid + '.jpg'))
+    image_width, image_height = img.size
+    image_size = os.path.getsize(os.path.join(imgdir, imgid + '.jpg'))
+    image_size = round(image_size / 1024.)
+    image_properties = dict(
+        name=image_name,
+        width=image_width,
+        height=image_height,
+        size=image_size
+    )
+    return image_properties
+
+
+def init_image_jsons(imgid):
+    with open(os.path.join(resdir, imgid + '.json'), 'w+') as f:
+        result = dict(
+            img_id=imgid + '.jpg',
+            metadata=[],
+            properties=getImageProperties(imgid),
+            human_num=0,
+            boxes=[],
+            points=[]
         )
-        return image_properties
+        json.dump(result, f)
+
+    marks = [0 for _ in range(256)]
+    with open(os.path.join(markdir, imgid + '.json'), 'w+') as f:
+        json.dump(marks, f)
 
 
 def check_new_images():
     print('Vérification des images ...')
     userdir = utils.userdir
     imgdir = utils.imgdir
+    resdir = utils.resdir
     nb_users = 0
     all_data = []
     for userjs in os.listdir(userdir):
@@ -214,26 +234,31 @@ def check_new_images():
     else:
         print("{} nouvelle(s) image(s) à affecter sur {} utilisateurs".format(len(images_to_add), nb_users), ' :',
               images_to_add)
-        nb_images_per_player = math.ceil(len(images_to_add) / nb_users)
-        print("Nombre d'images par utilisateur :", nb_images_per_player)
-        for userjs in os.listdir(userdir):
-            user_name = userjs.replace('.json', '').lower()
-            if user_name != "golden":
-                with open(os.path.join(userdir, userjs)) as f:
-                    userdata = json.load(f)
-                    nb_images_add_to_current_player = 0
-                    while len(images_to_add) > 0 and nb_images_add_to_current_player < nb_images_per_player:
-                        removed_image = images_to_add.pop(0)
-                        tmp = removed_image.split('.')
-                        id_image = ''.join(tmp[0:-1])
-                        userdata['data'].append(id_image)
-                        nb_images_add_to_current_player += 1
-                        print('user :', userjs, 'nb:', nb_images_add_to_current_player, ' - add ', id_image,
-                              ' -img restant à affecter:', len(images_to_add))
-                if nb_images_add_to_current_player > 0:
-                    with open(os.path.join(userdir, userjs), 'w+') as f:
-                        json.dump(dict(userdata), f)
-                    print("Mise à jour de l'utilisateur : ", userjs, '- nb_images :', len(userdata['data']), 'images :',
-                          userdata['data'])
-                else:
-                    print("Aucune mise à jour de l'utilisateur : ", userjs)
+        for image_filename in images_to_add:
+            print("image_filename:", image_filename)
+            imgid = Path(image_filename).stem
+            init_image_jsons(imgid)
+
+    nb_images_per_player = math.ceil(len(images_to_add) / nb_users)
+    print("Nombre d'images par utilisateur :", nb_images_per_player)
+    for userjs in os.listdir(userdir):
+        user_name = userjs.replace('.json', '').lower()
+        if user_name not in ["golden", "admin"]:
+            with open(os.path.join(userdir, userjs)) as f:
+                userdata = json.load(f)
+                nb_images_add_to_current_player = 0
+                while len(images_to_add) > 0 and nb_images_add_to_current_player < nb_images_per_player:
+                    removed_image = images_to_add.pop(0)
+                    tmp = removed_image.split('.')
+                    id_image = ''.join(tmp[0:-1])
+                    userdata['data'].append(id_image)
+                    nb_images_add_to_current_player += 1
+                    print('user :', userjs, 'nb:', nb_images_add_to_current_player, ' - add ', id_image,
+                          ' -img restant à affecter:', len(images_to_add))
+            if nb_images_add_to_current_player > 0:
+                # with open(os.path.join(userdir, userjs), 'w+') as f:
+                #     json.dump(dict(userdata), f)
+                print("Mise à jour de l'utilisateur : ", userjs, '- nb_images :', len(userdata['data']), 'images :',
+                      userdata['data'])
+            else:
+                print("Aucune mise à jour de l'utilisateur : ", userjs)

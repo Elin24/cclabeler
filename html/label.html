@@ -81,40 +81,40 @@
         <div class="col-sm-4"><b>density:</b></div>
         <div class="col-sm-8">
             <div>
-                <input type="radio" id="density_sparse" name="density" value="sparse" {{ checked.density_sparse_checked }}>
+                <input type="radio" id="density_sparse" name="density" value="sparse">
                 <label for="density_sparse">sparse</label>
-                <input type="radio" id="density_dense" name="density" value="dense" {{ checked.density_dense_checked }}>
+                <input type="radio" id="density_dense" name="density" value="dense">
                 <label for="density_dense">dense</label>
             </div>
         </div>
         <div class="col-sm-4"><b>place:</b></div>
         <div class="col-sm-8">
             <div>
-                <input type="radio" id="place_indoor" name="place" value="indoor" {{ checked.place_indoor_checked }}>
+                <input type="radio" id="place_indoor" name="place" value="indoor">
                 <label for="place_indoor">indoor</label>
-                <input type="radio" id="place_outdoor" name="place" value="outdoor" {{ checked.place_outdoor_checked }}>
+                <input type="radio" id="place_outdoor" name="place" value="outdoor">
                 <label for="place_outdoor">outdoor</label>
             </div>
         </div>
         <div class="col-sm-4"><b>angle:</b></div>
         <div class="col-sm-8">
             <div>
-                <input type="radio" id="angle_low" name="angle" value="low" {{ checked.angle_low_checked }}>
+                <input type="radio" id="angle_low" name="angle" value="low">
                 <label for="angle_low">low</label>
-                <input type="radio" id="angle_middle" name="angle" value="middle" {{ checked.angle_middle_checked }}>
+                <input type="radio" id="angle_middle" name="angle" value="middle">
                 <label for="angle_middle">middle</label>
-                <input type="radio" id="angle_high" name="angle" value="high" {{ checked.angle_high_checked }}>
+                <input type="radio" id="angle_high" name="angle" value="high">
                 <label for="angle_high">high</label>
             </div>
         </div>
         <div class="col-sm-4"><b>position:</b></div>
         <div class="col-sm-8">
             <div>
-                <input type="radio" id="position_close" name="position" value="close" {{ checked.position_close_checked }}>
+                <input type="radio" id="position_close" name="position" value="close">
                 <label for="position_close">close</label>
-                <input type="radio" id="position_middle" name="position" value="middle" {{ checked.position_middle_checked }}>
+                <input type="radio" id="position_middle" name="position" value="middle">
                 <label for="position_middle">middle</label>
-                <input type="radio" id="position_far" name="position" value="far" {{ checked.position_far_checked }}>
+                <input type="radio" id="position_far" name="position" value="far">
                 <label for="position_far">far</label>
             </div>
         </div>
@@ -156,7 +156,7 @@
             $("#density_dense").prop("checked", false);
             $("#place_indoor").prop("checked", false);
             $("#place_outdoor").prop("checked", false);
-            $("#anlge_low").prop("checked", false);
+            $("#angle_low").prop("checked", false);
             $("#angle_middle").prop("checked", false);
             $("#angle_high").prop("checked", false);
             $("#position_low").prop("checked", false);
