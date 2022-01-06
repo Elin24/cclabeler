@@ -67,7 +67,11 @@ class Player():
         # print('imgid:', imgid)
         marksum = sum(marks)
         if marksum <= 0:
-            pass
+            if len(points) > 0 or len(image_metadata) > 0:
+                if imgid in self.done:
+                    self.done.remove(imgid)
+                if imgid not in self.half:
+                    self.half += [imgid]
         elif marksum < len(marks):
             if imgid in self.done:
                 self.done.remove(imgid)
