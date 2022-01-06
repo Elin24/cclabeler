@@ -83,7 +83,7 @@ function changeImgMain(_which) {
     }
     var sendinfo = {
         user: user,
-        imgid: imgpath.split('/')[1].split('.')[0],
+        imgid: imgpath.split('/')[1],
         pattern: $("input[type='checkbox'][name='pattern']:checked").val(),
         uniform: $("input[type='checkbox'][name='uniform']:checked").val(),
         density: density,
@@ -95,7 +95,7 @@ function changeImgMain(_which) {
         which: _which
     };
     $.post('/jump', sendinfo, function (result) {
-        imgpath = "static/" + result.imgid + ".jpg";
+        imgpath = "static/" + result.imgid;
         opeStack.clear();
         drawStack = new DrawStack(result.drawStack);
         markStatus = new MarkStatus(result.marks);
@@ -207,7 +207,7 @@ $.ctrl('S', function () {
     }
     var sendinfo = {
         user: user,
-        imgid: imgpath.split('/')[1].split('.')[0],
+        imgid: imgpath.split('/')[1],
         pattern: $("input[type='checkbox'][name='pattern']:checked").val(),
         uniform: $("input[type='checkbox'][name='uniform']:checked").val(),
         density: density,

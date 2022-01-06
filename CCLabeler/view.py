@@ -286,14 +286,14 @@ def upload(request):
 
 
 def handle_uploaded_file(file, filename, user):
-    imgid = Path(filename).stem
+    imgid = filename# Path(filename).stem
     # Allocate the user
     path_user_json = Path(utils.userdir) / user
     with path_user_json.open(encoding="UTF-8") as source:
         user_json = json.load(source)
     if imgid in user_json["data"]:
         return "The image %s exists in %s \n" % (filename, user)
-    user_json["data"] += [str(Path(filename).stem)]
+    user_json["data"] += [imgid]
     with path_user_json.open("w", encoding="UTF-8") as target:
         json.dump(user_json, target)
 

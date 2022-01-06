@@ -51,7 +51,7 @@ class Player():
         # print('utils - save - image json file:',os.path.join(resdir, imgid + '.json'))
         with open(os.path.join(resdir, imgid + '.json'), 'w+') as f:
             result = dict(
-                img_id=imgid + '.jpg',
+                img_id=imgid,
                 metadata=image_metadata,
                 properties=image_properties,
                 human_num=len(labels),
@@ -153,7 +153,7 @@ class Player():
         return image_properties
 
     def absLabel(self, imgid, labels):
-        img = Image.open(os.path.join(imgdir, imgid + '.jpg'))
+        img = Image.open(os.path.join(imgdir, imgid))
         w, h = img.size
         for i, label in enumerate(labels):
             for k, v in label.items():
@@ -165,7 +165,7 @@ class Player():
         return labels
 
     def relLabel(self, imgid, labels):
-        img = Image.open(os.path.join(imgdir, imgid + '.jpg'))
+        img = Image.open(os.path.join(imgdir, imgid))
         w, h = img.size
         for i, label in enumerate(labels):
             for k, v in label.items():
@@ -178,10 +178,10 @@ class Player():
 
 
 def getImageProperties(imgid):
-    image_name = imgid + ".jpg"
-    img = Image.open(os.path.join(imgdir, imgid + '.jpg'))
+    image_name = imgid
+    img = Image.open(os.path.join(imgdir, imgid))
     image_width, image_height = img.size
-    image_size = os.path.getsize(os.path.join(imgdir, imgid + '.jpg'))
+    image_size = os.path.getsize(os.path.join(imgdir, imgid))
     image_size = round(image_size / 1024.)
     image_properties = dict(
         name=image_name,
@@ -195,7 +195,7 @@ def getImageProperties(imgid):
 def init_image_jsons(imgid):
     with open(os.path.join(resdir, imgid + '.json'), 'w+') as f:
         result = dict(
-            img_id=imgid + '.jpg',
+            img_id=imgid,
             metadata=[],
             properties=getImageProperties(imgid),
             human_num=0,
@@ -222,10 +222,10 @@ def check_new_images():
             userdata = json.load(f)
             print('user :', userjs, 'nb_images :', len(userdata['data']), 'images :', userdata['data'])
             for img in userdata['data']:
-                all_data.append(img + '.jpg')
+                all_data.append(img)
     print('nb_users:', nb_users, 'nb_total_images:', len(all_data), 'images :', all_data)
 
-    all_images = os.listdir(imgdir)
+    all_images = [image for image in os.listdir(imgdir) if os.path.splitext(image)[1] in ['.jpg', '.png', '.jpeg']]
     print('Répertoire images - nb_images :', len(all_images), 'images :', all_images)
     images_to_add = [element for element in all_images if element not in all_data]
 
@@ -236,7 +236,8 @@ def check_new_images():
               images_to_add)
         for image_filename in images_to_add:
             print("image_filename:", image_filename)
-            imgid = Path(image_filename).stem
+            # On rajoute l'extension dans l'id pour gerer les differents formats
+            imgid = image_filename# Path(image_filename).stem
             init_image_jsons(imgid)
 
     nb_images_per_player = math.ceil(len(images_to_add) / nb_users)
@@ -249,15 +250,13 @@ def check_new_images():
                 nb_images_add_to_current_player = 0
                 while len(images_to_add) > 0 and nb_images_add_to_current_player < nb_images_per_player:
                     removed_image = images_to_add.pop(0)
-                    tmp = removed_image.split('.')
-                    id_image = ''.join(tmp[0:-1])
-                    userdata['data'].append(id_image)
+                    userdata['data'].append(removed_image)
                     nb_images_add_to_current_player += 1
-                    print('user :', userjs, 'nb:', nb_images_add_to_current_player, ' - add ', id_image,
+                    print('user :', userjs, 'nb:', nb_images_add_to_current_player, ' - add ', removed_image,
                           ' -img restant à affecter:', len(images_to_add))
             if nb_images_add_to_current_player > 0:
-                # with open(os.path.join(userdir, userjs), 'w+') as f:
-                #     json.dump(dict(userdata), f)
+                with open(os.path.join(userdir, userjs), 'w+') as f:
+                    json.dump(dict(userdata), f)
                 print("Mise à jour de l'utilisateur : ", userjs, '- nb_images :', len(userdata['data']), 'images :',
                       userdata['data'])
             else:

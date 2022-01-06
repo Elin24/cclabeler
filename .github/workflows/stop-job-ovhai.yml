@@ -7,7 +7,7 @@ on:
 env:
   OVH_REGION: GRA
 jobs:
-  deploy:
+  stop:
     runs-on: ubuntu-latest
     steps:
       - name: Install ovhai command

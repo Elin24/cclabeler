@@ -8,7 +8,7 @@ env:
   TAG: master
 
 jobs:
-  deploy:
+  start:
     runs-on: ubuntu-latest
     steps:
       - name: Install ovhai command

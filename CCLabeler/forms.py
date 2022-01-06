@@ -6,4 +6,5 @@ class UploadFileForm(forms.Form):
     userdir = Path(utils.userdir,  label='File')
     CHOICES = [(file.name, file.stem) for file in userdir.glob('*.json')]
     user = forms.ChoiceField(choices=CHOICES, label='User', widget=forms.Select)
-    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    file = forms.FileField(widget=forms.ClearableFileInput(
+        attrs={'multiple': True, 'accept': ".png, .jpg, .jpeg"}))
