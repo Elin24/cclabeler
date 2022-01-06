@@ -50,6 +50,7 @@
                         <h1>Work Space for <b>{{ username }}</b> </h1>
                     </caption>
                     <tbody>
+                    {% if username != "admin" %}
                         {% for row in cdata %}
                         <tr>
                             {% for d in row  %}
@@ -65,6 +66,7 @@
                             {% endfor %}
                         </tr>
                         {% endfor %}
+                    {% endif %}
                     </tbody>
                 </table>
             </div>
