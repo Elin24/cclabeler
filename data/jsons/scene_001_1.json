@@ -1,0 +1,1 @@
+{"img_id": "scene_001_1.jpg", "metadata": ["density_sparse", "place_indoor", "angle_middle", "position_middle"], "properties": {"name": "scene_001_1.jpg", "width": 512, "height": 384, "size": 28}, "human_num": 4, "boxes": [], "points": [{"x": 255.52, "y": 203.04000000000002}, {"x": 323.2, "y": 211.68}, {"x": 325.6, "y": 143.04}, {"x": 348.64, "y": 141.12}]}
