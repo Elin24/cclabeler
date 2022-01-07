@@ -184,7 +184,8 @@ $.ctrl('Y', function () {
         runDraw();
     }
 });
-$.ctrl('S', function () {
+
+function save() {
     var density = "";
     var selectedDensity = $("input[type='radio'][name='density']:checked");
     if (selectedDensity.length > 0) {
@@ -227,7 +228,10 @@ $.ctrl('S', function () {
             setTimeout(() => { savediv.addClass('hide'); }, 1000);
         }
     });
-})
+}
+$.ctrl('S', () => save())
+
+$.ctrl('D', () => disconnect())
 
 function changebtn(btn) {
     var btns = ["opbox", "oppoint", "oprectify"];

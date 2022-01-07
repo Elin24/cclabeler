@@ -15,6 +15,8 @@ imgdir = os.path.join(settings.BASE_DIR, "data", "images")
 resdir = os.path.join(settings.BASE_DIR, "data", "jsons")
 markdir = os.path.join(settings.BASE_DIR, "data", "marks")
 
+# Dictionary to reflect user connexion
+users_state = {}
 
 class Player():
     def __init__(self, name='root'):
@@ -30,10 +32,39 @@ class Player():
                 self.done = list(userInfo['done'])
                 self.half = list(userInfo['half'])
 
+    #@property
+    #def isLogged(self):
+    #    """Return 3 states
+    #    2: User has been logged for 1 hour or less
+    #    1: User has been logged for 1 hour or more
+    #    0: User is not logged
+    #    """
+    #    if self.name not in users_state:
+    #        return 0
+    #    if datetime.now() - users_state[self.name] > timedelta(minutes=1):
+    #        self.disconnect()
+    #        return 1
+    #    else:
+    #        return 2
+
+    def disconnect(self):
+        if self.name in users_state:
+            users_state.pop(self.name)
+            print("User %s is disconnected"%self.name)
+
+        else:
+            print('user %s is already disconnected'% self.name)
+
     def testPsd(self, psd=''):
         if self.password == None:
             return False
-        return psd == self.password
+        if psd == self.password:
+            # Update State Connexion Dictionary
+            users_state.update({self.name : datetime.now()})
+            print("User %s is connected"%self.name)
+            return True
+        else:
+            return False
 
     def labeling(self):
         label = "default"

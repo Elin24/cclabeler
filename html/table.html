@@ -84,6 +84,13 @@
         {{ form.as_p }}
         <button type="submit" value="Upload File" class="btn btn-info">Send</button>
     </form>
+    {% if username == "admin" %}
+      <form action="/disconnect/" method="POST">
+        {% csrf_token %}
+        {{ form_unlock_user.as_p }}
+        <button type="submit" value="Disconnect" class="btn btn-info">Disconnect</button>
+      </form>
+    {% endif %}
     {% endif %}
     <div>
         {% if username == "admin" %}
@@ -104,7 +111,14 @@
             $(document.body).append(form);
             $('form').submit();
         });
+        window.onload = function () {
+              setInterval(function() {
+                  ping();
+              }, 1 * 1000);
+        };
 
-</script>
+
+    </script>
+    <script src="static/disconnect.js"></script>
 
 </html>

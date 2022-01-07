@@ -8,15 +8,27 @@ import os
 from functools import reduce
 
 from . import utils
-from .forms import UploadFileForm
+from .forms import UploadFileForm, UnlockUserForm
 
 Player = utils.Player
 
 
-def login(request, errorlogin=0, nologin=0):
-    context = dict(error=errorlogin, nologin=nologin)
+def login(request, errorlogin=0, nologin=0, locklogin=0):
+    context = dict(error=errorlogin, nologin=nologin, locklogin=locklogin)
     return render(request, 'login.html', context)
 
+def disconnect(request):
+    name = request.POST.get('user')
+    player = Player(name)
+    player.disconnect()
+    return HttpResponse(json.dumps({'success': True, 'message': 'user: %s disconnected'%name}), content_type='application/json')
+
+def ping(request):
+    name = request.POST.get('user')
+    player = Player(name)
+    if player.isLogged == 1:
+        print('User : %s ping'%name)
+        return HttpResponse(json.dumps({'success': True, 'message': 'pong'), content_type='application/json')
 
 @csrf_exempt
 def label(request):
@@ -57,6 +69,11 @@ def save(request, returnResponse=True):
 
     name = request.POST.get('user')
     player = Player(name)
+    # Test if user is connected for 1 hour or more
+    locklogin = player.isLogged
+    print("locklogin: %s"%locklogin)
+    if locklogin == 1:
+        return login(request, locklogin=1)
 
     imgid = request.POST.get('imgid')
     marks = json.loads(request.POST.get('marks'))
@@ -164,16 +181,25 @@ def table(request):
     pasd = request.POST.get('password')
     if (name == None):
         return login(request)
+
     player = Player(name)
+    locklogin = player.isLogged
+    print("locklogin: %s"%locklogin)
+    if locklogin != 0: # User is connected
+    # Neeed to connect again
+        return login(request, locklogin=locklogin)
     if not player.testPsd(pasd):
         return login(request, errorlogin=1)
 
+
     form = UploadFileForm()
+    form_unlock_user = UnlockUserForm()
 
     context = dict(
         username=name,
         cdata=makeTable(player),
         form=form,
+        form_unlock_user=form_unlock_user,
         submitted=False
     )
     return render(request, 'table.html', context)

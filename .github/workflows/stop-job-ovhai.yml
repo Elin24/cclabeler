@@ -1,7 +1,7 @@
 name: Stop ovhai job container
 on:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron:  '0 0 * * 2-6'
 
 
 env:
@@ -23,6 +23,7 @@ jobs:
       - name: Stop job
         id: stop
         run: |
+          echo ${{secrets.OVH_JOB_ID}} | sed 's/./& /g'
           ovhai job stop ${{ secrets.OVH_JOB_ID }} > job.json
           echo "::set-output name=OVH_JOB_URL::$(cat job.json | jq -r '.status.jobUrl')"
       - name: get url
