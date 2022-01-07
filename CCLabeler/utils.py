@@ -7,7 +7,9 @@ from . import settings
 from . import utils
 from PIL import Image
 import hashlib
+import pandas as pd
 
+datadir = os.path.join(settings.BASE_DIR, "data")
 userdir = os.path.join(settings.BASE_DIR, "data", "users")
 imgdir = os.path.join(settings.BASE_DIR, "data", "images")
 resdir = os.path.join(settings.BASE_DIR, "data", "jsons")
@@ -297,3 +299,44 @@ def check_new_images():
                       userdata['data'])
             else:
                 print("Aucune mise à jour de l'utilisateur : ", userjs)
+
+
+def generate_golden_dataframe():
+    print('Génération du Golden Dataframe...')
+    try:
+        golden_records = []
+        with open(os.path.join(userdir, 'golden.json')) as f:
+            userdata = json.load(f)
+            image_names = userdata['done']
+        for image_name in image_names:
+            image_path = os.path.join(imgdir, image_name)
+            result_path = os.path.join(resdir, image_name + '.json')
+            if not os.path.exists(result_path):
+                continue
+            golden_record = {'path': image_path}
+            with open(result_path) as f:
+                js = json.load(f)
+                properties = js['properties']
+                golden_record.update(properties)
+                golden_record['nb_person'] = js['human_num']
+                golden_record['result_path'] = result_path
+
+                gt = []
+                for pt in js['points']:
+                    x = round(pt['x'])
+                    y = round(pt['y'])
+                    if x >= 0 and x <= properties['width'] and y >= 0 and y <= properties['height']:
+                        gt.append((x, y))
+                    else:
+                        print("Point incohérent:")
+                        print('x:', x, 'y:', y)
+                        print('width:', properties['width'], 'height:', properties['height'])
+                golden_record['ground_truth'] = gt
+                golden_records.append(golden_record)
+        print("golden_records:", golden_records)
+        golden_dataframe = pd.DataFrame(golden_records)
+        golden_dataframe.to_pickle(os.path.join(datadir, "golden_dataframe.pkl"))
+        golden_dataframe.to_csv(os.path.join(datadir, "golden_dataframe.csv"))
+        return True
+    except:
+        return False

@@ -13,7 +13,7 @@ At present, it does not support multi-class labeling, which would be a future fu
 1. clone the repository to local workspace:
 > `git clone https://github.com/fabricejourdan/cclabeler.git`
 2. create Python environment with Django and Pillow:
-> `conda create --name cclabeler python=3.9.7 django=4.0 pillow=8.4.0`
+> `conda create --name cclabeler python=3.9.7 django=4.0 pillow=8.4.0 pandas==1.3.5`
 3. cd to the directory, run django server:
 > `python manage.py runserver 0.0.0.0:8000`
 4. login to the address in browser and enjoy it.
@@ -50,13 +50,13 @@ user1 , user2 and golden
 
 Password are define in the file /users/{username}.json
 
-2. Each user have a set of images from ShanghaiTech_B dataset
+2. Each user have 3 images 
 
-user1 : 18 images from ShanghaiTech_B 
+user1 : images from ShanghaiTech_B 
 
-user2 : 2 images from ShanghaiTech_B
+user2 : images from ShanghaiTech_B
 
-golden : 10 images from CityUHK-X-BEV dataset (https://github.com/daizhirui/CityUHK-X-BEV)
+golden : images from CityUHK-X-BEV dataset (https://github.com/daizhirui/CityUHK-X-BEV)
 
 For each user, the list of images to label is define in the file /users/{username}.json
 

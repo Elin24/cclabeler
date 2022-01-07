@@ -26,6 +26,7 @@ urlpatterns = [
     re_path(r'^save$', view.save),
     re_path(r'^summary$', view.summary),
     path('upload/', view.upload, name="upload"),
+    path('generate_golden_dataframe/', view.generate_golden_dataframe, name="generate_golden_dataframe")
     #path('image_upload', view.image_view, name = 'image_upload'),
     #path('success', view.success, name = 'success'),
 ]
