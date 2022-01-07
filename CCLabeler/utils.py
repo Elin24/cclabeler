@@ -150,7 +150,7 @@ class Player():
             return []
         with open(jsonpath) as f:
             js = json.load(f)
-            if 'properties' not in js or not isinstance(js['properties'], dict) or js['properties'] == {} or 1==1:
+            if 'properties' not in js or not isinstance(js['properties'], dict) or js['properties'] == {}:
                 image_properties = getImageProperties(os.path.join(imgdir, imgid))
                 print('utils - getProperties - image_properties:', image_properties)
             else:
@@ -247,7 +247,6 @@ def check_new_images():
     print('Vérification des images ...')
     userdir = utils.userdir
     imgdir = utils.imgdir
-    resdir = utils.resdir
     nb_users = 0
     all_data = []
     for userjs in os.listdir(userdir):
