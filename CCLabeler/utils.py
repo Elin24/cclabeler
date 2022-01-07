@@ -6,7 +6,10 @@ import math
 from . import settings
 from . import utils
 from PIL import Image
+import hashlib
+import pandas as pd
 
+datadir = os.path.join(settings.BASE_DIR, "data")
 userdir = os.path.join(settings.BASE_DIR, "data", "users")
 imgdir = os.path.join(settings.BASE_DIR, "data", "images")
 resdir = os.path.join(settings.BASE_DIR, "data", "jsons")
@@ -150,7 +153,7 @@ class Player():
         with open(jsonpath) as f:
             js = json.load(f)
             if 'properties' not in js or not isinstance(js['properties'], dict) or js['properties'] == {}:
-                image_properties = getImageProperties(imgid)
+                image_properties = getImageProperties(os.path.join(imgdir, imgid))
                 print('utils - getProperties - image_properties:', image_properties)
             else:
                 image_properties = js['properties']
@@ -181,18 +184,47 @@ class Player():
         return labels
 
 
-def getImageProperties(imgid):
-    image_name = imgid
-    img = Image.open(os.path.join(imgdir, imgid))
+def get_hash(filepath: str) -> str:
+    """Returns the MD5 checksum of a file
+    Args:
+        filepath (str): path to file
+    Returns:
+        str: hash result
+    """
+    my_file = open(filepath, "rb")
+    md5_hash = hashlib.md5()
+    content = my_file.read()
+    md5_hash.update(content)
+    return md5_hash.hexdigest()
+
+
+def getImageProperties(image_path):
+    img = Image.open(image_path)
+    image_name = os.path.basename(image_path)
+    extension = os.path.splitext(image_path)[-1][1:].lower()
     image_width, image_height = img.size
-    image_size = os.path.getsize(os.path.join(imgdir, imgid))
-    image_size = round(image_size / 1024.)
+    image_size = os.path.getsize(image_path)
+    ratio = round(image_width / image_height, 3)
+
+    nb_channels = len(img.getbands())
+
+    with open(image_path, "rb") as f:
+        md5_hash = hashlib.md5()
+        content = f.read()
+        md5_hash.update(content)
+        md5 = md5_hash.hexdigest()
+
     image_properties = dict(
         name=image_name,
+        extension=extension,
         width=image_width,
         height=image_height,
-        size=image_size
+        ratio=ratio,
+        nb_channels=nb_channels,
+        size=image_size,
+        md5=md5
     )
+    print("image_properties:", image_properties)
     return image_properties
 
 
@@ -201,7 +233,7 @@ def init_image_jsons(imgid):
         result = dict(
             img_id=imgid,
             metadata=[],
-            properties=getImageProperties(imgid),
+            properties=getImageProperties(os.path.join(imgdir, imgid)),
             human_num=0,
             boxes=[],
             points=[]
@@ -217,7 +249,6 @@ def check_new_images():
     print('Vérification des images ...')
     userdir = utils.userdir
     imgdir = utils.imgdir
-    resdir = utils.resdir
     nb_users = 0
     all_data = []
     for userjs in os.listdir(userdir):
@@ -229,7 +260,7 @@ def check_new_images():
                 print('user :', userjs, 'nb_images :', len(userdata['data']), 'images :', userdata['data'])
                 for img in userdata['data']:
                     all_data.append(img)
-    nb_users = nb_users -1 #Le nombre d'utilisateurs sur lesquels on va répartir les images ne contient pas 'golden'
+    nb_users = nb_users - 1  # Le nombre d'utilisateurs sur lesquels on va répartir les images ne contient pas 'golden'
     print('nb_users:', nb_users, 'nb_total_images:', len(all_data), 'images :', all_data)
 
     all_images = [image for image in os.listdir(imgdir) if os.path.splitext(image)[1] in ['.jpg', '.png', '.jpeg']]
@@ -244,7 +275,7 @@ def check_new_images():
         for image_filename in images_to_add:
             print("image_filename:", image_filename)
             # On rajoute l'extension dans l'id pour gerer les differents formats
-            imgid = image_filename# Path(image_filename).stem
+            imgid = image_filename  # Path(image_filename).stem
             init_image_jsons(imgid)
 
     nb_images_per_player = math.ceil(len(images_to_add) / nb_users)
@@ -268,3 +299,44 @@ def check_new_images():
                       userdata['data'])
             else:
                 print("Aucune mise à jour de l'utilisateur : ", userjs)
+
+
+def generate_golden_dataframe():
+    print('Génération du Golden Dataframe...')
+    try:
+        golden_records = []
+        with open(os.path.join(userdir, 'golden.json')) as f:
+            userdata = json.load(f)
+            image_names = userdata['done']
+        for image_name in image_names:
+            image_path = os.path.join(imgdir, image_name)
+            result_path = os.path.join(resdir, image_name + '.json')
+            if not os.path.exists(result_path):
+                continue
+            golden_record = {'path': image_path}
+            with open(result_path) as f:
+                js = json.load(f)
+                properties = js['properties']
+                golden_record.update(properties)
+                golden_record['nb_person'] = js['human_num']
+                golden_record['result_path'] = result_path
+
+                gt = []
+                for pt in js['points']:
+                    x = round(pt['x'])
+                    y = round(pt['y'])
+                    if x >= 0 and x <= properties['width'] and y >= 0 and y <= properties['height']:
+                        gt.append((x, y))
+                    else:
+                        print("Point incohérent:")
+                        print('x:', x, 'y:', y)
+                        print('width:', properties['width'], 'height:', properties['height'])
+                golden_record['ground_truth'] = gt
+                golden_records.append(golden_record)
+        print("golden_records:", golden_records)
+        golden_dataframe = pd.DataFrame(golden_records)
+        golden_dataframe.to_pickle(os.path.join(datadir, "golden_dataframe.pkl"))
+        golden_dataframe.to_csv(os.path.join(datadir, "golden_dataframe.csv"))
+        return True
+    except:
+        return False

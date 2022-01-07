@@ -128,6 +128,13 @@ def jump(request):
     print('view - jump - context:', context)
     return HttpResponse(json.dumps(context), content_type='application/json')
 
+@csrf_exempt
+def generate_golden_dataframe(request):
+    res = utils.generate_golden_dataframe()
+    if res:
+        return HttpResponse("OK")
+    else:
+        return HttpResponse("KO")
 
 # --------------------------Label Table ------------------------------------
 
@@ -253,20 +260,20 @@ def summary(request):
     return render(request, 'summary.html', context)
 
 
-def image_view(request):
-    if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Successful")
-    else:
-        form = ImageForm()
-    return render(request, 'image_upload.html', {'form': form})
+# def image_view(request):
+#     if request.method == 'POST':
+#         form = ImageForm(request.POST, request.FILES)
+#
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponse("Successful")
+#     else:
+#         form = ImageForm()
+#     return render(request, 'image_upload.html', {'form': form})
 
 
 def success(request):
-    return HttpResponse('successfuflly uploaded')
+    return HttpResponse('successfully uploaded')
 
 
 @csrf_exempt
@@ -286,7 +293,7 @@ def upload(request):
 
 
 def handle_uploaded_file(file, filename, user):
-    imgid = filename# Path(filename).stem
+    imgid = filename  # Path(filename).stem
     # Allocate the user
     path_user_json = Path(utils.userdir) / user
     with path_user_json.open(encoding="UTF-8") as source:

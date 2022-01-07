@@ -147,7 +147,7 @@
             img_name = String(image_properties.name)
             img_width = String(image_properties.width)
             img_height = String(image_properties.height)
-            img_size = String(image_properties.size)
+            img_size = String(Math.round(image_properties.size/1024))
             $('#image_def').text(img_name + " - " + img_width + "x" + img_height + " - " + img_size + " Ko");
 
             $("#periodic_pattern").prop("checked", false);
