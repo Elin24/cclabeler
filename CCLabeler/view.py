@@ -26,9 +26,12 @@ def disconnect(request):
 def ping(request):
     name = request.POST.get('user')
     player = Player(name)
-    if player.isLogged == 1:
+    locklogin = player.isLogged
+    if locklogin != 1:
         print('User : %s ping'%name)
         return HttpResponse(json.dumps({'success': True, 'message': 'pong'), content_type='application/json')
+    else:
+        print('User : %s cannot pong'%name)
 
 @csrf_exempt
 def label(request):
