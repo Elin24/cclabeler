@@ -128,13 +128,15 @@ def jump(request):
     print('view - jump - context:', context)
     return HttpResponse(json.dumps(context), content_type='application/json')
 
+
 @csrf_exempt
 def generate_golden_dataframe(request):
-    res = utils.generate_golden_dataframe()
+    res = utils.generate_golden_dataframe(utils.userdir, utils.imgdir, utils.resdir, utils.datadir)
     if res:
         return HttpResponse("OK")
     else:
         return HttpResponse("KO")
+
 
 # --------------------------Label Table ------------------------------------
 
