@@ -301,7 +301,7 @@ def check_new_images():
                 print("Aucune mise à jour de l'utilisateur : ", userjs)
 
 
-def generate_golden_dataframe():
+def generate_golden_dataframe(userdir, imgdir, resdir, datadir):
     print('Génération du Golden Dataframe...')
     try:
         golden_records = []
@@ -333,10 +333,11 @@ def generate_golden_dataframe():
                         print('width:', properties['width'], 'height:', properties['height'])
                 golden_record['ground_truth'] = gt
                 golden_records.append(golden_record)
-        print("golden_records:", golden_records)
+        # print("golden_records:", golden_records)
         golden_dataframe = pd.DataFrame(golden_records)
         golden_dataframe.to_pickle(os.path.join(datadir, "golden_dataframe.pkl"))
         golden_dataframe.to_csv(os.path.join(datadir, "golden_dataframe.csv"))
         return True
-    except:
+    except Exception as e:
+        print("Exception : ", str(e))
         return False
