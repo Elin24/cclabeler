@@ -26,15 +26,16 @@ def disconnect(request):
 
 def ping(request):
     name = request.POST.get('user')
+    print('user %s want s to ping pong'%name)
     player = Player(name)
     if player.pong:
         player.connect()
         print('User : %s pong'%name)
-        return HttpResponse(json.dumps({'success': True, 'message': 'pong'}), content_type='application/json')
+        return HttpResponse(json.dumps({'success': True, 'message': 'user: %s pong'%name}), content_type='application/json')
     else:
         player.disconnect()
         print('User : %s cannot pong'%name)
-        return HttpResponse(json.dumps({'success': False, 'message': 'cannot pong'}), content_type='application/json')
+        return HttpResponse(json.dumps({'success': False, 'message': 'user: %s cannot pong'%name}), content_type='application/json')
 
 @csrf_exempt
 def label(request):
@@ -179,6 +180,7 @@ def makeTable(player):
 @csrf_exempt
 def table(request):
     name = request.POST.get('user')
+    print('name : %s '%name)
     pasd = request.POST.get('password')
     if (name == None):
         return login(request)
@@ -195,9 +197,16 @@ def table(request):
     form = UploadFileForm()
     form_unlock_user = UnlockUserForm()
 
+    cdata = []
+    if player.name == "admin":
+        for a_name in ['user1', 'user2']:
+            player = Player(a_name)
+            cdata.append((a_name, makeTable(player)))
+    else:
+        cdata = [(name, makeTable(player))]
     context = dict(
         username=name,
-        cdata=makeTable(player),
+        cdata=cdata,
         form=form,
         form_unlock_user=form_unlock_user,
         submitted=False

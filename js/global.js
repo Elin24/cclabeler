@@ -412,7 +412,7 @@ window.onload = function () {
     }, 30 * 1000);
 
     setInterval(function() {
-        ping(user);
-    }, 1 * 1000);
+        ping();
+    }, 1 * 1000 * 5);
 
 };
