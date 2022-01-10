@@ -2,7 +2,7 @@ function ping(user) {
   var sendinfo = {
       user: user
   };
-  $.post('/ping', sendinfo, function (result) {
+  $.post('/ping/', sendinfo, function (result) {
       console.log("/ping");
       console.log(result);
       if (! result.success) {

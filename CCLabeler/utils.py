@@ -19,6 +19,7 @@ markdir = os.path.join(settings.BASE_DIR, "data", "marks")
 # Dictionary to reflect user connexion
 users_state = {}
 
+
 class Player():
     def __init__(self, name='admin'):
         self.name = name
@@ -33,7 +34,6 @@ class Player():
                 self.done = list(userInfo['done'])
                 self.half = list(userInfo['half'])
 
-
     @property
     def pong(self):
         if self.name not in users_state:
@@ -46,16 +46,16 @@ class Player():
     def disconnect(self):
         if self.name in users_state:
             users_state.pop(self.name)
-            print("User %s is disconnected"%self.name)
+            print("User %s is disconnected" % self.name)
         else:
-            print('user %s is already disconnected'% self.name)
+            print('user %s is already disconnected' % self.name)
             pass
 
     def connect(self):
         # Update State Connexion Dictionary
 
-        users_state.update({self.name : datetime.now()})
-        print("User %s is connected"%self.name)
+        users_state.update({self.name: datetime.now()})
+        print("User %s is connected" % self.name)
 
     def testPsd(self, psd=''):
         if self.password == None:
@@ -390,3 +390,9 @@ def generate_golden_dataframe(userdir, imgdir, resdir, datadir):
     except Exception as e:
         print("Exception : ", str(e))
         return False
+
+
+def push_into_golden(name, imgid):
+    print("name:", name)
+    print("imgid:", imgid)
+    return True
