@@ -33,12 +33,12 @@ def ping(request):
     player = Player(name)
     if player.pong:
         player.connect()
-        # print('User : %s pong'%name)
+        print('User : %s pong'%name)
         return HttpResponse(json.dumps({'success': True, 'message': 'user: %s pong' % name}),
                             content_type='application/json')
     else:
         player.disconnect()
-        # print('User : %s cannot pong'%name)
+        print('User : %s cannot pong'%name)
         return HttpResponse(json.dumps({'success': False, 'message': 'user: %s cannot pong' % name}),
                             content_type='application/json')
 

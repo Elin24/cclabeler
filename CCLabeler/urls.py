@@ -30,6 +30,4 @@ urlpatterns = [
     path('disconnect/', view.disconnect),
     path('ping/', view.ping),
     path('push_into_golden/', view.push_into_golden),
-    # path('image_upload', view.image_view, name = 'image_upload'),
-    # path('success', view.success, name = 'success'),
 ]
