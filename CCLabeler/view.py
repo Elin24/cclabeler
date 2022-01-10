@@ -192,7 +192,6 @@ def table(request):
     if not player.testPsd(pasd):
         return login(request, errorlogin=1)
 
-
     form = UploadFileForm()
     form_unlock_user = UnlockUserForm()
 
