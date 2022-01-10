@@ -8,6 +8,7 @@ from . import utils
 from PIL import Image
 import hashlib
 import pandas as pd
+from datetime import datetime, timedelta
 
 datadir = os.path.join(settings.BASE_DIR, "data")
 userdir = os.path.join(settings.BASE_DIR, "data", "users")
@@ -15,6 +16,8 @@ imgdir = os.path.join(settings.BASE_DIR, "data", "images")
 resdir = os.path.join(settings.BASE_DIR, "data", "jsons")
 markdir = os.path.join(settings.BASE_DIR, "data", "marks")
 
+# Dictionary to reflect user connexion
+users_state = {}
 
 class Player():
     def __init__(self, name='root'):
@@ -30,10 +33,38 @@ class Player():
                 self.done = list(userInfo['done'])
                 self.half = list(userInfo['half'])
 
+
+    @property
+    def pong(self):
+        if self.name not in users_state:
+            return False
+        if datetime.now() - users_state[self.name] > timedelta(seconds=2):
+            return False
+        else:
+            return True
+
+    def disconnect(self):
+        if self.name in users_state:
+            users_state.pop(self.name)
+            print("User %s is disconnected"%self.name)
+
+        else:
+            print('user %s is already disconnected'% self.name)
+
+    def connect(self):
+        # Update State Connexion Dictionary
+
+        users_state.update({self.name : datetime.now()})
+        print("User %s is connected"%self.name)
+
     def testPsd(self, psd=''):
         if self.password == None:
             return False
-        return psd == self.password
+        if psd == self.password:
+            self.connect()
+            return True
+        else:
+            return False
 
     def labeling(self):
         label = "default"

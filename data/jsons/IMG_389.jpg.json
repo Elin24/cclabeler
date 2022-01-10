@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"img_id": "IMG_389.jpg", "metadata": ["periodic_pattern", "density_dense", "place_outdoor", "angle_middle", "position_middle"], "properties": {"name": "IMG_389.jpg", "extension": "jpg", "width": 1024, "height": 768, "ratio": 1.333, "nb_channels": 3, "size": 157907, "md5": "5c63ebb4b71ec65ae889b1de60d258a8"}, "human_num": 0, "boxes": [], "points": []}
+=======
+{"img_id": "IMG_389.jpg", "metadata": ["periodic_pattern", "density_dense", "place_outdoor", "angle_middle", "position_middle"], "properties": {"name": "IMG_389.jpg", "width": 1024, "height": 768, "size": 154}, "human_num": 14, "boxes": [], "points": [{"x": 223.04000000000002, "y": 149.76}, {"x": 257.6, "y": 197.76}, {"x": 328.64, "y": 218.88}, {"x": 51.20000000000003, "y": 218.88}, {"x": 336.32, "y": 142.07999999999998}, {"x": 276.8, "y": 65.28}, {"x": 302.72, "y": 68.16}, {"x": 354.56, "y": 62.400000000000006}, {"x": 434.24, "y": 96.96000000000001}, {"x": 529.28, "y": 135.35999999999999}, {"x": 542.72, "y": 146.88}, {"x": 549.4399999999999, "y": 146.88}, {"x": 578.24, "y": 111.35999999999999}, {"x": 586.88, "y": 109.44}]}
+>>>>>>> WP: close a user not handled
