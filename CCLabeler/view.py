@@ -18,6 +18,7 @@ def login(request, errorlogin=0, nologin=0, locklogin=0):
     return render(request, 'login.html', context)
 
 def disconnect(request):
+    # Disconnect a user (from admin)
     name = request.POST.get('user')
     player = Player(name)
     player.disconnect()
@@ -26,12 +27,14 @@ def disconnect(request):
 def ping(request):
     name = request.POST.get('user')
     player = Player(name)
-    locklogin = player.isLogged
-    if locklogin != 1:
-        print('User : %s ping'%name)
-        return HttpResponse(json.dumps({'success': True, 'message': 'pong'), content_type='application/json')
+    if player.pong:
+        player.connect()
+        print('User : %s pong'%name)
+        return HttpResponse(json.dumps({'success': True, 'message': 'pong'}), content_type='application/json')
     else:
+        player.disconnect()
         print('User : %s cannot pong'%name)
+        return HttpResponse(json.dumps({'success': False, 'message': 'cannot pong'}), content_type='application/json')
 
 @csrf_exempt
 def label(request):
@@ -72,11 +75,6 @@ def save(request, returnResponse=True):
 
     name = request.POST.get('user')
     player = Player(name)
-    # Test if user is connected for 1 hour or more
-    locklogin = player.isLogged
-    print("locklogin: %s"%locklogin)
-    if locklogin == 1:
-        return login(request, locklogin=1)
 
     imgid = request.POST.get('imgid')
     marks = json.loads(request.POST.get('marks'))
@@ -186,11 +184,11 @@ def table(request):
         return login(request)
 
     player = Player(name)
-    locklogin = player.isLogged
-    print("locklogin: %s"%locklogin)
-    if locklogin != 0: # User is connected
-    # Neeed to connect again
-        return login(request, locklogin=locklogin)
+
+    if player.pong:
+        # a client user pong, locked down the connexion
+        return login(request, locklogin=1)
+
     if not player.testPsd(pasd):
         return login(request, errorlogin=1)
 

@@ -410,7 +410,9 @@ window.onload = function () {
     setInterval(function() {
         save();
     }, 30 * 1000);
+
     setInterval(function() {
-        disconnect();
-    }, 60 * 1000);
+        ping(user);
+    }, 1 * 1000);
+
 };

@@ -32,38 +32,35 @@ class Player():
                 self.done = list(userInfo['done'])
                 self.half = list(userInfo['half'])
 
+
     @property
-    def isLogged(self):
-        """Return 3 states
-        2: User has been logged for 1 hour or less
-        1: User has been logged for 1 hour or more
-        0: User is not logged
-        """
+    def pong(self):
         if self.name not in users_state:
-            return 0
-        if datetime.now() - users_state[self.name] > timedelta(second=2):
-            self.disconnect()
-            return 1
+            return False
+        if datetime.now() - users_state[self.name] > timedelta(seconds=2):
+            return False
         else:
-            return 2
+            return True
 
     def disconnect(self):
         if self.name in users_state:
             users_state.pop(self.name)
-            #self.isLogged = False
             print("User %s is disconnected"%self.name)
 
         else:
             print('user %s is already disconnected'% self.name)
 
+    def connect(self):
+        # Update State Connexion Dictionary
+
+        users_state.update({self.name : datetime.now()})
+        print("User %s is connected"%self.name)
+
     def testPsd(self, psd=''):
         if self.password == None:
             return False
         if psd == self.password:
-            # Update State Connexion Dictionary
-            users_state.update({self.name : datetime.now()})
-            #self.isLogged = True
-            print("User %s is connected"%self.name)
+            self.connect()
             return True
         else:
             return False

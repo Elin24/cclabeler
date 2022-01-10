@@ -231,8 +231,6 @@ function save() {
 }
 $.ctrl('S', () => save())
 
-$.ctrl('D', () => disconnect())
-
 function changebtn(btn) {
     var btns = ["opbox", "oppoint", "oprectify"];
     var selc = 'btn-primary', noselc = 'btn-info';
