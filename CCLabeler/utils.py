@@ -20,7 +20,7 @@ markdir = os.path.join(settings.BASE_DIR, "data", "marks")
 users_state = {}
 
 class Player():
-    def __init__(self, name='root'):
+    def __init__(self, name='admin'):
         self.name = name
         self.password = None
         self.data, self.done, self.half = [], [], []
@@ -38,7 +38,7 @@ class Player():
     def pong(self):
         if self.name not in users_state:
             return False
-        if datetime.now() - users_state[self.name] > timedelta(seconds=2):
+        if datetime.now() - users_state[self.name] > timedelta(seconds=10):
             return False
         else:
             return True
