@@ -105,6 +105,7 @@
         $('td').click(function () {
             var user = $(this).parents('table').find('caption').attr('id')
             var form = '<form action="/label" method="POST">' +
+                '<input type="hidden" name="origin_user" value="{{ username }}">' +
                 '<input type="hidden" name="user" value="'+user+'">' +
                 '<input type="hidden" name="imgid" value="' + this.innerHTML + '">' +
                 '</form>';

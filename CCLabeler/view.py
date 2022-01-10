@@ -17,30 +17,39 @@ def login(request, errorlogin=0, nologin=0, locklogin=0):
     context = dict(error=errorlogin, nologin=nologin, locklogin=locklogin)
     return render(request, 'login.html', context)
 
+
 def disconnect(request):
     # Disconnect a user (from admin)
     name = request.POST.get('user')
     player = Player(name)
     player.disconnect()
-    return HttpResponse(json.dumps({'success': True, 'message': 'user: %s disconnected'%name}), content_type='application/json')
+    return HttpResponse(json.dumps({'success': True, 'message': 'user: %s disconnected' % name}),
+                        content_type='application/json')
+
 
 def ping(request):
     name = request.POST.get('user')
-    print('user %s want s to ping pong'%name)
+    print('user %s wants to ping pong'%name)
     player = Player(name)
     if player.pong:
         player.connect()
-        print('User : %s pong'%name)
-        return HttpResponse(json.dumps({'success': True, 'message': 'user: %s pong'%name}), content_type='application/json')
+        # print('User : %s pong'%name)
+        return HttpResponse(json.dumps({'success': True, 'message': 'user: %s pong' % name}),
+                            content_type='application/json')
     else:
         player.disconnect()
-        print('User : %s cannot pong'%name)
-        return HttpResponse(json.dumps({'success': False, 'message': 'user: %s cannot pong'%name}), content_type='application/json')
+        # print('User : %s cannot pong'%name)
+        return HttpResponse(json.dumps({'success': False, 'message': 'user: %s cannot pong' % name}),
+                            content_type='application/json')
+
 
 @csrf_exempt
 def label(request):
+    origin_user = request.POST.get('origin_user')
+    print('origin_user:', origin_user)
     name = request.POST.get('user')
-    if (name == None):
+    print('name:', name)
+    if name is None:
         return login(request)
     player = Player(name)
     imgid = request.POST.get('imgid')
@@ -55,6 +64,7 @@ def label(request):
     image_metadata = player.getMetadata(imgid)
     image_properties = player.getProperties(imgid)
     context = dict(
+        origin_user=origin_user,
         imgid=imgid,
         image_metadata=json.dumps(image_metadata),
         image_properties=json.dumps(image_properties),
@@ -149,6 +159,20 @@ def jump(request):
 
 
 @csrf_exempt
+def push_into_golden(request):
+    name = request.POST.get('user')
+    imgid = request.POST.get('imgid')
+
+    context = dict(
+        success=True,
+        imgid=imgid,
+        name=name
+    )
+    print('push_into_golden - jump - context:', context)
+    return HttpResponse(json.dumps(context), content_type='application/json')
+
+
+@csrf_exempt
 def generate_golden_dataframe(request):
     res = utils.generate_golden_dataframe(utils.userdir, utils.imgdir, utils.resdir, utils.datadir)
     if res:
@@ -180,7 +204,7 @@ def makeTable(player):
 @csrf_exempt
 def table(request):
     name = request.POST.get('user')
-    print('name : %s '%name)
+    # print('name : %s '%name)
     pasd = request.POST.get('password')
     if (name == None):
         return login(request)
