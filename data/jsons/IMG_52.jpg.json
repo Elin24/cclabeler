@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"img_id": "IMG_52.jpg", "metadata": [], "properties": {"name": "IMG_52.jpg", "extension": "jpg", "width": 1024, "height": 768, "ratio": 1.333, "nb_channels": 3, "size": 129172, "md5": "28dd5483626d40175ab4cdfd69addb73"}, "human_num": 0, "boxes": [], "points": []}
-=======
-{"img_id": "IMG_52.jpg", "metadata": [], "properties": {"name": "IMG_52.jpg", "width": 1024, "height": 768, "size": 126}, "human_num": 10, "boxes": [], "points": [{"x": 290.88, "y": 45.12}, {"x": 325.2, "y": 36.0}, {"x": 349.67999999999995, "y": 34.32}, {"x": 391.91999999999996, "y": 30.48}, {"x": 393.11999999999995, "y": 21.12}, {"x": 427.91999999999996, "y": 8.16}, {"x": 466.79999999999995, "y": 3.5999999999999996}, {"x": 348.0, "y": 118.56}, {"x": 413.03999999999996, "y": 100.56}, {"x": 478.32, "y": 101.03999999999999}]}
->>>>>>> WP: close a user not handled
+{"img_id": "IMG_52.jpg", "metadata": ["periodic_pattern", "density_sparse", "place_outdoor", "angle_middle", "position_middle"], "properties": {"name": "IMG_52.jpg", "extension": "jpg", "width": 1024, "height": 768, "ratio": 1.333, "nb_channels": 3, "size": 129172, "md5": "28dd5483626d40175ab4cdfd69addb73"}, "human_num": 0, "boxes": [], "points": []}

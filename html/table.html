@@ -48,7 +48,7 @@
     <div class="row">
         <div class="col-md-12">
             <table class="table table-bordered">
-                <caption>
+                <caption id="{{ user }}">
                     <h1>Work Space for <b>{{ user }}</b></h1>
                 </caption>
                 <tbody>
@@ -103,8 +103,9 @@
 
 <script>
         $('td').click(function () {
+            var user = $(this).parents('table').find('caption').attr('id')
             var form = '<form action="/label" method="POST">' +
-                '<input type="hidden" name="user" value="{{ username }}">' +
+                '<input type="hidden" name="user" value="'+user+'">' +
                 '<input type="hidden" name="imgid" value="' + this.innerHTML + '">' +
                 '</form>';
             $(document.body).append(form);
