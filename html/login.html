@@ -41,6 +41,8 @@
                 </form>
                 <div class="hide alert alert-danger">incorrect user number or password</div>
                 <div class="hide alert alert-warning">please login</div>
+                <div class="hide alert alert-info">User already logged, choose another user</div>
+
             </div>
         </div>
         <div class="right">
@@ -51,6 +53,8 @@
             $('.login .alert-danger').removeClass('hide');
         } else if({{ nologin }}) {
             $('.login .alert-warning').removeClass('hide');
+        } else if({{ locklogin }}) {
+            $('.login .alert-info').removeClass('hide');
         }
     </script>
 </body>

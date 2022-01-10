@@ -1,7 +1,7 @@
 name: Start ovhai job container
 on:
   schedule:
-    - cron:  '0 5 * * *'
+    - cron:  '0 5 * * 1-5'
 
 env:
   OVH_REGION: GRA

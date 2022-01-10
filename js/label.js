@@ -176,7 +176,7 @@ function rectifyStart(e) {
             rectifyIdx = _rectifyIdx;
             curLabelForm = drawStack.label(rectifyIdx, true);
             rectifyOperation();
-        }    
+        }
     }
 }
 
@@ -185,7 +185,7 @@ function rectifyMove(e) {
     var _rectifyIdx = drawStack.nearby(loc.x, loc.y);
     if (_rectifyIdx >= 0) canvas.style.cursor = 'move';
     else canvas.style.cursor = 'default';
-    
+
     if (curLabelForm != null) {
         var closeType = curLabelForm.nearby(loc.x, loc.y);
         if(closeType) canvas.style.cursor = cursors[closeType];

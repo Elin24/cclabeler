@@ -72,7 +72,7 @@ MarkStatus.prototype.markFunc = function(mark) {
     for(var i = 1; i < this.current.length; i++) {
         w >>= 1, h >>= 1;
         switch(this.current[i]) {
-            case '1': 
+            case '1':
                 break;
             case '2': ws += w;
                 break;
@@ -409,5 +409,10 @@ window.onload = function () {
 
     setInterval(function() {
         save();
-    }, 60 * 1000);
+    }, 30 * 1000);
+
+    setInterval(function() {
+        ping(user);
+    }, 1 * 1000);
+
 };
