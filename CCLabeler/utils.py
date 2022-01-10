@@ -46,16 +46,16 @@ class Player():
     def disconnect(self):
         if self.name in users_state:
             users_state.pop(self.name)
-            print("User %s is disconnected"%self.name)
-
+            # print("User %s is disconnected"%self.name)
         else:
-            print('user %s is already disconnected'% self.name)
+            # print('user %s is already disconnected'% self.name)
+            pass
 
     def connect(self):
         # Update State Connexion Dictionary
 
         users_state.update({self.name : datetime.now()})
-        print("User %s is connected"%self.name)
+        # print("User %s is connected"%self.name)
 
     def testPsd(self, psd=''):
         if self.password == None:
