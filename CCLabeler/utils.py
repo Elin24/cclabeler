@@ -395,4 +395,32 @@ def generate_golden_dataframe(userdir, imgdir, resdir, datadir):
 def push_into_golden(name, imgid):
     print("name:", name)
     print("imgid:", imgid)
+    jsonfile = os.path.join(userdir, name + '.json')
+    try:
+        with open(jsonfile) as f:
+            userInfo = json.load(f)
+            data = userInfo['data']
+            done = list(userInfo['done'])
+            half = list(userInfo['half'])
+            if imgid in data:
+                data.remove(imgid)
+            if imgid in done:
+                done.remove(imgid)
+            if imgid in half:
+                half.remove(imgid)
+            json.dump(userInfo, f)
+        jsonfile = os.path.join(userdir, 'golden.json')
+        with open(jsonfile) as f:
+            userInfo = json.load(f)
+            data = userInfo['data']
+            done = list(userInfo['done'])
+            if imgid not in data:
+                data += [imgid]
+            if imgid not in done:
+                done += [imgid]
+            json.dump(userInfo, f)
+    except Exception as e:
+        print("Image transfer to golden dataset impossible : " + str(e))
+        return False
+
     return True
