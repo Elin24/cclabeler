@@ -1,1 +1,1 @@
-{"password": "user1", "data": ["IMG_17.jpg", "IMG_52.jpg", "IMG_6.jpg"], "done": [], "half": ["IMG_17.jpg", "IMG_52.jpg", "IMG_6.jpg"]}
+{"password": "user1", "data": ["IMG_6.jpg", ,"IMG_17.jpg", "IMG_52.jpg"], "done": ["IMG_6.jpg"], "half": ["IMG_17.jpg", "IMG_52.jpg"]}
