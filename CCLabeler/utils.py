@@ -152,7 +152,16 @@ class Player():
             return []
         with open(jsonpath) as f:
             js = json.load(f)
+            to_create = False
             if 'properties' not in js or not isinstance(js['properties'], dict) or js['properties'] == {}:
+                to_create = True
+            else:
+                sample = {"name": "IMG_52.jpg", "extension": "jpg", "width": 1024, "height": 768, "ratio": 1.333,
+                          "nb_channels": 3, "size": 129172, "md5": "28dd5483626d40175ab4cdfd69addb73"}
+                for key, value in sample.items():
+                    if key not in js['properties']:
+                        to_create = True
+            if to_create:
                 image_properties = getImageProperties(os.path.join(imgdir, imgid))
                 print('utils - getProperties - image_properties:', image_properties)
             else:
@@ -229,20 +238,29 @@ def getImageProperties(image_path):
 
 
 def init_image_jsons(imgid):
-    with open(os.path.join(resdir, imgid + '.json'), 'w+') as f:
-        result = dict(
-            img_id=imgid,
-            metadata=[],
-            properties=getImageProperties(os.path.join(imgdir, imgid)),
-            human_num=0,
-            boxes=[],
-            points=[]
-        )
-        json.dump(result, f)
-
-    marks = [0 for _ in range(256)]
-    with open(os.path.join(markdir, imgid + '.json'), 'w+') as f:
-        json.dump(marks, f)
+    result_json = os.path.join(resdir, imgid + '.json')
+    if not os.path.exists(result_json):
+        # print("result file doesnot exists :", result_json)
+        with open(result_json, 'w+') as f:
+            result = dict(
+                img_id=imgid,
+                metadata=[],
+                properties=getImageProperties(os.path.join(imgdir, imgid)),
+                human_num=0,
+                boxes=[],
+                points=[]
+            )
+            json.dump(result, f)
+    else:
+        print("result file allready exists :", result_json)
+    marks_json = os.path.join(markdir, imgid + '.json')
+    if not os.path.exists(marks_json):
+        # print("marks file doesnot exists :", result_json)
+        marks = [0 for _ in range(256)]
+        with open(marks_json, 'w+') as f:
+            json.dump(marks, f)
+    else:
+        print("marks file allready exists :", result_json)
 
 
 def check_new_images():
