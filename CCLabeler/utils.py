@@ -393,32 +393,41 @@ def generate_golden_dataframe(userdir, imgdir, resdir, datadir):
 
 
 def push_into_golden(name, imgid):
-    print("name:", name)
-    print("imgid:", imgid)
-    jsonfile = os.path.join(userdir, name + '.json')
+    # print("name:", name)
+    # print("imgid:", imgid)
     try:
+        jsonfile = os.path.join(userdir, name + '.json')
         with open(jsonfile) as f:
-            userInfo = json.load(f)
-            data = userInfo['data']
-            done = list(userInfo['done'])
-            half = list(userInfo['half'])
+            userdata = json.load(f)
+            data = list(userdata['data'])
+            done = list(userdata['done'])
+            half = list(userdata['half'])
             if imgid in data:
                 data.remove(imgid)
             if imgid in done:
                 done.remove(imgid)
             if imgid in half:
                 half.remove(imgid)
-            json.dump(userInfo, f)
+            userdata['data'] = data
+            userdata['done'] = done
+            userdata['half'] = half
+        with open(jsonfile, 'w+') as f:
+            # print("userdata:", userdata)
+            json.dump(dict(userdata), f)
         jsonfile = os.path.join(userdir, 'golden.json')
         with open(jsonfile) as f:
-            userInfo = json.load(f)
-            data = userInfo['data']
-            done = list(userInfo['done'])
+            userdata = json.load(f)
+            data = list(userdata['data'])
+            done = list(userdata['done'])
             if imgid not in data:
                 data += [imgid]
             if imgid not in done:
                 done += [imgid]
-            json.dump(userInfo, f)
+            userdata['data'] = data
+            userdata['done'] = done
+        with open(jsonfile, 'w+') as f:
+            # print("userdata:", userdata)
+            json.dump(dict(userdata), f)
     except Exception as e:
         print("Image transfer to golden dataset impossible : " + str(e))
         return False
