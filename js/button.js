@@ -96,6 +96,23 @@ function changeImg(_which) {
     }
 }
 
+function save() {
+    var sendinfo = {
+        user: user,
+        imgid: imgpath.split('/')[1].split('.')[0],
+        marks: JSON.stringify(markStatus.marks),
+        labels: JSON.stringify(drawStack.stack)
+    };
+    $.post('/save', sendinfo, function (result) {
+        if (result.success) {
+            var savediv = $('#save');
+            drawSchedule(result.donelen, result.halflen, result.datalen);
+            savediv.removeClass('hide');
+            setTimeout(() => { savediv.addClass('hide'); }, 1000);
+        }
+    });
+}
+
 $(document).keydown(function (event) {
     if (event.keyCode == 46 && labelStage == 'rectify' && curLabelForm != null) {
         drawStack.remove(rectifyIdx);
@@ -157,22 +174,7 @@ $.ctrl('Y', function () {
         runDraw();
     }
 });
-$.ctrl('S', function () {
-    var sendinfo = {
-        user: user,
-        imgid: imgpath.split('/')[1].split('.')[0],
-        marks: JSON.stringify(markStatus.marks),
-        labels: JSON.stringify(drawStack.stack)
-    };
-    $.post('/save', sendinfo, function (result) {
-        if (result.success) {
-            var savediv = $('#save');
-            drawSchedule(result.donelen, result.halflen, result.datalen);
-            savediv.removeClass('hide');
-            setTimeout(() => { savediv.addClass('hide'); }, 1000);
-        }
-    });
-})
+$.ctrl('S', save)
 
 function changebtn(btn) {
     var btns = ["opbox", "oppoint", "oprectify"];
