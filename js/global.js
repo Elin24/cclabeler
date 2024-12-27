@@ -149,8 +149,9 @@ function drawRect(context, x, y, width, height, borderColor = null, fillColor = 
 function drawPoint(context, x, y, color = '#f00', width = 1) {
     context.beginPath();
     context.lineCap = 'round';
-    context.moveTo(x, y);
-    context.lineTo(x, y);
+    // context.moveTo(x, y);
+    // context.lineTo(x, y);
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
     context.closePath();
     context.lineWidth = width;
     context.strokeStyle = color;
